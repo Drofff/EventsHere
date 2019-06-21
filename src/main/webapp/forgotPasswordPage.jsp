@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 </head>
-<body>
+<body style="background-image : url(https://visiteurope.com/wp-content/uploads/Events4.jpg);  background-size: 100% 100%;">
 <div class="ui left fixed vertical menu">
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
@@ -16,7 +16,9 @@
     <a class="item" href="/EventsHere/registration">Registration</a>
     <a class="item" href="/EventsHere/login">Login</a>
 </div>
-<form style="margin-left: 20%;" action="/EventsHere/forgotPassword" method="post">
+<form style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" action="/EventsHere/forgotPassword" method="post">
+<div class="ui segment">
+    <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%; margin-right: 5%;">
     <%
         String msg = (String)request.getAttribute("message");
 
@@ -27,14 +29,16 @@
     %>
 
     <h3 class="header">Please input your email address</h3>
-    <div class="ui input focus">
-        <input type="text" name="email" placeholder="Email">
+    <div class="ui input focus" style="margin-top: 5%;">
+        <input type="text" name="email" placeholder="Email" style="width: 300px;">
     </div>
-    <button class="ui toggle button">
+    <br/>
+    <button class="ui toggle button" style="margin-top: 5%;">
         Restore password
     </button>
 
-
+</div>
+</div>
 </form>
 </body>
 </html>
