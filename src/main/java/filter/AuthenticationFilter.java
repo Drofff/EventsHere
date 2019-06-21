@@ -9,15 +9,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @WebFilter(filterName = "AuthenticationFilter", urlPatterns = {"/*"})
 public class AuthenticationFilter implements Filter {
 
+    private List<String> unsecuredUrls = new ArrayList<>();
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        unsecuredUrls.add("/login");
+        unsecuredUrls.add("/registration");
+        unsecuredUrls.add("/forgotPassword");
     }
 
     @Override
@@ -29,9 +35,17 @@ public class AuthenticationFilter implements Filter {
 
         Cookie [] cookies = httpServletRequest.getCookies();
 
-        Optional<Cookie> sessionTokenCookie = Arrays.stream(cookies).filter(x -> x.getName().equals(AuthenticationService.REMEMBER_ME_KEY)).findFirst();
+        Optional<Cookie> sessionTokenCookie = Optional.empty();
+
+        if (cookies != null && cookies.length > 0) {
+            sessionTokenCookie = Arrays.stream(cookies).filter(x -> x.getName().equals(AuthenticationService.REMEMBER_ME_KEY)).findFirst();
+        }
 
         if (session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY) == null) {
+
+            if (!httpServletRequest.getRequestURI().matches(".*(/login).*")) {
+                session.setAttribute("redirect_to", httpServletRequest.getRequestURI());
+            }
 
             if (sessionTokenCookie.isPresent()) {
 
@@ -47,19 +61,23 @@ public class AuthenticationFilter implements Filter {
 
                     e.printStackTrace();
 
-                    request.getRequestDispatcher("/login").forward(request, response);
+                    httpServletRequest.getRequestDispatcher("/login").forward(httpServletRequest, response);
+
+                    return;
 
                 }
 
-            } else if (!httpServletRequest.getRequestURI().matches("(/login).*")) {
+            } else if (unsecuredUrls.stream().noneMatch(x -> httpServletRequest.getRequestURI().matches(".*(" + x + ").*"))) {
 
-                request.getRequestDispatcher("/login").forward(request, response);
+                httpServletRequest.getRequestDispatcher("/login").forward(httpServletRequest, response);
+                return;
+
             }
 
 
         }
 
-        chain.doFilter(request, response);
+        chain.doFilter(httpServletRequest, response);
 
     }
 

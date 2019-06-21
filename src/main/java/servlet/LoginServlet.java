@@ -32,9 +32,8 @@ public class LoginServlet extends HttpServlet {
 
         if (id == AuthenticationService.FAILURE_CODE) {
 
-            req.setAttribute("message", "Invalid credentials");
-
-            req.getRequestDispatcher("/login").forward(req, resp);
+            resp.sendRedirect("/EventsHere/login?error");
+            return;
 
         }
 
@@ -58,7 +57,14 @@ public class LoginServlet extends HttpServlet {
 
         }
 
-        req.getRequestDispatcher("/").forward(req, resp);
+        String redirectUrl = (String)req.getSession().getAttribute("redirect_to");
+
+        if (redirectUrl != null) {
+            req.getSession().removeAttribute("redirect_to");
+            resp.sendRedirect(redirectUrl);
+        } else {
+            resp.sendRedirect("/EventsHere");
+        }
 
     }
 }
