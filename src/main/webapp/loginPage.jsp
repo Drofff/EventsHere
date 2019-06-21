@@ -13,20 +13,24 @@
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
     </div>
-    <a class="item" href="/registration">Registration</a>
+    <a class="item" href="/EventsHere/registration">Registration</a>
 </div>
+<form class="ui form" method="post" action="/EventsHere/login" style="margin-left: 20%; margin-top: 10%; width: 50%;">
+<%! Integer count = 0 %>
 <%
 
-    String message = request.getParameter("message");
+    String queryString = request.getQueryString();
 
-    if (message != null && ! message.isEmpty()) {
+    if (queryString != null && queryString.equals("error")) {
 
-        out.println("<div class='ui negative message' style='margin-left: 20%;'><div class='header'>" + message + "</div></div>");
+        count++;
+        out.println("<div class='ui negative message' style='margin-top: 5%; margin-bottom : 5%;'><div class='header'>Invalid credentials</div></div>");
 
+    } else {
+        count = 0;
     }
 
 %>
-<form class="ui form" method="post" action="/login" style="margin-left: 20%; margin-top: 10%;">
     <div class="field">
         <label>Email</label>
         <input type="text" name="username" placeholder="your@mail.com">
@@ -36,8 +40,15 @@
         <input type="password" name="password" placeholder="Password">
     </div>
     <div class="field">
+    <%
+
+        if (count >= 2) {
+            out.println("<h4 class='header'><a href='/EventsHere/forgotPassword'>Forgot your password? We can help!</a></div>");
+        }
+
+    %>
         <div class="ui checkbox">
-            <input type="checkbox" tabindex="0" name="remember_me" values="remember_me" class="hidden">
+            <input type="checkbox" name="remember_me" values="remember_me" style="margin-top: 7%; margin-bottom: 7%;">
             <label>Remember me</label>
         </div>
     </div>

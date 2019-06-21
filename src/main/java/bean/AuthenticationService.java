@@ -74,12 +74,31 @@ public class AuthenticationService implements Serializable {
 
         } catch (SQLException e) {
 
-            e.printStackTrace();
-
             return FAILURE_CODE;
 
         }
 
+    }
+
+    public boolean userExists(String username) {
+
+        String query = "select * from user_info where username = ?";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, username);
+
+            ResultSet set = preparedStatement.executeQuery();
+
+            if (set.next()) {
+                return set.getString("username") != null;
+            }
+
+        } catch (Exception e) {}
+
+        return false;
     }
 
     public String getToken(Long id) {
@@ -98,7 +117,11 @@ public class AuthenticationService implements Serializable {
 
             if (resultSet.next()) {
 
-                return resultSet.getString("token");
+                try {
+
+                    return resultSet.getString("token");
+
+                } catch (Exception e) {}
 
             }
 
@@ -110,7 +133,7 @@ public class AuthenticationService implements Serializable {
 
             insertStatement.setString(2, token);
 
-            if (insertStatement.execute()) {
+            if (insertStatement.executeUpdate() > 0) {
 
                 return token;
 
@@ -121,7 +144,6 @@ public class AuthenticationService implements Serializable {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
 
