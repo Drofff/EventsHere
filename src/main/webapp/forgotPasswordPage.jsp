@@ -20,17 +20,16 @@
 <div class="ui segment">
     <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%; margin-right: 5%;">
     <%
-        String msg = (String)request.getAttribute("message");
+        String msg = (String)request.getParameter("message");
 
         if (msg != null) {
             out.println("<div class='ui negative message' style='margin-top: 5%; margin-bottom : 5%;'><div class='header'>" + msg + "</div></div>");
-            request.removeAttribute("message");
         }
     %>
 
     <h3 class="header">Please input your email address</h3>
     <div class="ui input focus" style="margin-top: 5%;">
-        <input type="text" name="email" placeholder="Email" style="width: 300px;">
+        <input type="text" required name="email" placeholder="Email" style="width: 300px;">
     </div>
     <br/>
     <button class="ui toggle button" style="margin-top: 5%;">

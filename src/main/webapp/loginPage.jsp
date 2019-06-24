@@ -35,11 +35,11 @@
 %>
     <div class="field" style="margin-bottom: 5%;">
         <label>Email</label>
-        <input type="text" name="username" placeholder="your@mail.com">
+        <input type="text" required name="username" placeholder="your@mail.com">
     </div>
     <div class="field" style="margin-bottom: 5%;">
         <label>Password</label>
-        <input type="password" name="password" placeholder="Password">
+        <input type="password" required name="password" placeholder="Password">
         <%
 
                 if (count >= 2) {
@@ -48,14 +48,14 @@
 
         %>
     </div>
-    <div class="field">
+    <div class="field" style="margin-left: 5%;">
         <div class="ui checkbox" >
             <input type="checkbox" name="remember_me" values="remember_me" style="margin-top: 7%; margin-bottom: 7%;">
             <label>Remember me</label>
         </div>
     </div>
     <br/>
-    <button class="ui button" type="submit" style="margin-top: 7%;">Login</button>
+    <button class="ui button" type="submit" style="margin-top: 7%; margin-left: 5%;">Login</button>
    </div>
 </div>
 </form>
