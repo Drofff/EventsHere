@@ -37,7 +37,7 @@ public class ForgotChangePasswordServlet extends HttpServlet {
                 return;
             }
 
-            HttpSession httpSession = req.getSession();
+            HttpSession httpSession = req.getSession(false);
 
             UserDataService userDataService = UserDataService.getInstance(httpSession);
 

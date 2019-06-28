@@ -4,11 +4,9 @@ import bean.AuthenticationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Enumeration;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
@@ -24,6 +22,8 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
+        HttpSession session = req.getSession(false);
+
         Boolean rememberMe = req.getParameter("remember_me") != null;
 
         AuthenticationService authenticationService = AuthenticationService.getInstance(req.getSession());
@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
 
         }
 
-        req.getSession().setAttribute(AuthenticationService.USER_AUTHENTICATION_KEY, id);
+        session.setAttribute(AuthenticationService.USER_AUTHENTICATION_KEY, id);
 
         if (rememberMe) {
 
@@ -49,18 +49,14 @@ public class LoginServlet extends HttpServlet {
 
                 resp.addCookie(cookie);
 
-            } else {
-                //DEBUG
-                //TODO REMOVE
-                System.out.println("ERROR WITH REMEMBER ME");
             }
 
         }
 
-        String redirectUrl = (String)req.getSession().getAttribute("redirect_to");
+        String redirectUrl = (String)session.getAttribute("redirect_to");
 
         if (redirectUrl != null) {
-            req.getSession().removeAttribute("redirect_to");
+            session.removeAttribute("redirect_to");
             resp.sendRedirect(redirectUrl);
         } else {
             resp.sendRedirect("/EventsHere");

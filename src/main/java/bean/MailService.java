@@ -62,6 +62,18 @@ public class MailService implements Serializable {
 
     }
 
+    public void sendActivationToken(String email, String token) throws MessagingException {
+
+        String link = "http://localhost:8080/EventsHere/registration?token=" + token;
+
+        String message = "Welcome to Events Here! To activate your account, please follow link:<br/><br/><a href='" + link + "' style='margin-left:30%;'>Activate account</a>";
+
+        MimeMessage mimeMessage = getMimeMessage(email, "Account activation", message);
+
+        Transport.send(mimeMessage);
+
+    }
+
     private static void init() {
 
         Properties properties = new Properties();

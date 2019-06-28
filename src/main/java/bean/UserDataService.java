@@ -1,10 +1,14 @@
 package bean;
 
+import dto.User;
+
 import javax.servlet.http.HttpSession;
+import javax.xml.transform.Result;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDataService implements Serializable {
 
@@ -65,6 +69,64 @@ public class UserDataService implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void activate(String email) {
+
+        String query = "update user_info set active = true where username = ?";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, email);
+
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void save(User user) {
+
+        String query = "insert into user_info (username, password, active) values (?, ?, ?)";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setBoolean(3, false);
+
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public boolean isActive(Long id) {
+        String query = "select active from user_info where id = ?";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getBoolean("active");
+            }
+
+        } catch (Exception e) {}
+
+        return false;
 
     }
 

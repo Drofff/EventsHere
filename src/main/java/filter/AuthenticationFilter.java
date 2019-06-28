@@ -9,10 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @WebFilter(filterName = "AuthenticationFilter", urlPatterns = {"/*"})
 public class AuthenticationFilter implements Filter {
@@ -26,12 +23,18 @@ public class AuthenticationFilter implements Filter {
         unsecuredUrls.add("/forgotPassword");
     }
 
+
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-        HttpSession session = httpServletRequest.getSession(true);
+        HttpSession session = httpServletRequest.getSession(false);
+
+        if (session == null) {
+            session = httpServletRequest.getSession(true);
+        }
 
         Cookie [] cookies = httpServletRequest.getCookies();
 
@@ -44,6 +47,7 @@ public class AuthenticationFilter implements Filter {
         if (session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY) == null) {
 
             if (!httpServletRequest.getRequestURI().matches(".*(/login).*")) {
+
                 session.setAttribute("redirect_to", httpServletRequest.getRequestURI());
             }
 
@@ -77,7 +81,7 @@ public class AuthenticationFilter implements Filter {
 
         }
 
-        chain.doFilter(httpServletRequest, response);
+        chain.doFilter(request, response);
 
     }
 

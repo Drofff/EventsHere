@@ -19,26 +19,22 @@
 </div>
 <div style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" class="ui segment">
 
-<h2 class="ui header">
+<h2 class="ui header" style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
   <i class="green check icon"></i>
   <div class="content">
     Successfully authenticated
   </div>
 </h2>
 
-<h4 class="ui header">Please enter new password</h4>
-
-
-<form class="ui form" method="post" action="/EventsHere/forgotChangePassword">
+<form class="ui form" method="post" action="/EventsHere/forgotChangePassword" style="margin-left: 5%; margin-right: 5%; margin-bottom: 5%;">
+    <h4 class="ui header" style="margin-bottom: 3%;">Please enter new password</h4>
   <div class='field <c:if test="${not empty lengthError || not empty passwordMismatch}">error</c:if>'>
     <label>New password</label>
     <input type="password" name="password" required placeholder="New Password">
 
     <c:if test="${not empty lengthError}">
-         <div class="ui error message">
-            <div class="header"><c:out value="${lengthError}"></c:out></div>
-          </div>
-        </c:if>
+            <div class="header red" style="margin-top: 2%;">Minimum password length is 5 symbols</div>
+    </c:if>
 
   </div>
 
@@ -47,18 +43,15 @@
     <input type="password" name="rpassword" required placeholder="Confirm password">
 
     <c:if test="${not empty passwordMismatch}">
-       <div class="ui error message">
-          <div class="header"><c:out value="${passwordMismatch}"></c:out></div>
-        </div>
-      </c:if>
+          <div class="header red" style="margin-top: 2%;">Password mismatch. Please make sure that repeated password is equals to new password</div>
+    </c:if>
 
   </div>
 
 
-  <button class="ui button" type="submit">Change</button>
+  <button class="ui button" type="submit" style="margin-top: 3%;">Change</button>
 </form>
 
 </div>
-</form>
 </body>
 </html>

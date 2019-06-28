@@ -103,7 +103,7 @@ public class AuthenticationService implements Serializable {
 
     public String getToken(Long id) {
 
-        String selectQuery = "select user_id from session_token where user_id = ?";
+        String selectQuery = "select token from session_token where user_id = ?";
 
         String insertQuery = "insert into session_token (user_id, token) VALUES (?, ?)";
 

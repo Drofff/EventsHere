@@ -11,8 +11,7 @@
 <body style="background-image : url(https://visiteurope.com/wp-content/uploads/Events4.jpg);  background-size: 100% 100%;">
 <div class="ui left fixed vertical menu">
     <div class="item">
-        <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
-    </div>
+        <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png"> </div>
     <a class="item" href="/EventsHere/registration">Registration</a>
     <a class="item" href="/EventsHere/login">Login</a>
 </div>
