@@ -1,7 +1,10 @@
 package servlet;
 
+import bean.AuthenticationService;
 import bean.EventsService;
-import dto.Event;
+import bean.ProfileService;
+import entity.Event;
+import entity.Profile;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +28,21 @@ public class EventServlet extends HttpServlet {
             Event currentEvent = eventsService.findById(id);
 
             req.setAttribute("event", currentEvent);
+
+            ProfileService profileService = ProfileService.getInstance(req.getSession());
+
+            Profile profile = profileService.findByOwnerId( (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+
+            if (profile != null) {
+
+                req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
+                req.setAttribute("photoUrl", profile.getPhotoUrl());
+
+                if (currentEvent.getMembers().stream().anyMatch(x -> x.getId().equals(profile.getId()))) {
+                    req.setAttribute("member", true);
+                }
+
+            }
 
             req.getRequestDispatcher("/eventPage.jsp").include(req, resp);
 

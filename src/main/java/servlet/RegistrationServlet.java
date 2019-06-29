@@ -4,7 +4,7 @@ import bean.ActivationService;
 import bean.AuthenticationService;
 import bean.UserDataService;
 import bean.ValidationService;
-import dto.User;
+import entity.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

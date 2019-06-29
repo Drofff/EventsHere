@@ -3,8 +3,8 @@ package servlet;
 import bean.AuthenticationService;
 import bean.EventsService;
 import bean.ProfileService;
-import dto.Event;
-import dto.Profile;
+import entity.Event;
+import entity.Profile;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,14 +48,14 @@ public class SearchServlet extends HttpServlet {
 
         req.setAttribute("events", events);
 
-        Profile profile = profileService.findById((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        req.setAttribute("tags", eventsService.findAllTags());
+
+        Profile profile = profileService.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
-
-        req.setAttribute("tags", eventsService.findAllTags());
 
         req.getRequestDispatcher("/searchPage.jsp").include(req, resp);
 

@@ -1,12 +1,13 @@
 package bean;
 
-import dto.Profile;
+import entity.Profile;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class ProfileService implements Serializable {
 
@@ -24,7 +25,7 @@ public class ProfileService implements Serializable {
         return profileService;
     }
 
-    public Profile findById(Long id) {
+    public Profile findByOwnerId(Long id) {
         String query = "select * from profile where user_id = ?";
 
         try {
@@ -37,21 +38,27 @@ public class ProfileService implements Serializable {
 
             if (resultSet.next()) {
 
-                Profile profile = new Profile();
-
-                profile.setId(resultSet.getLong("id"));
-                profile.setFirstName(resultSet.getString("first_name"));
-                profile.setLastName(resultSet.getString("last_name"));
-                profile.setPhotoUrl(resultSet.getString("photo_url"));
-                profile.setUserId(resultSet.getLong("user_id"));
-
-                return profile;
+                return parseProfile(resultSet);
             }
 
         } catch (Exception e) {}
 
         return null;
 
+    }
+
+    public static Profile parseProfile(ResultSet resultSet) throws SQLException {
+
+        Profile profile = new Profile();
+
+        profile.setId(resultSet.getLong("id"));
+        profile.setPhotoUrl(resultSet.getString("photo_url"));
+        profile.setPhoneNumber(resultSet.getString("phone_number"));
+        profile.setUserId(resultSet.getLong("user_id"));
+        profile.setLastName(resultSet.getString("last_name"));
+        profile.setFirstName(resultSet.getString("first_name"));
+
+        return profile;
     }
 
 }

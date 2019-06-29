@@ -1,14 +1,13 @@
 package bean;
 
-import dto.User;
+
+import entity.User;
 
 import javax.servlet.http.HttpSession;
-import javax.xml.transform.Result;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class UserDataService implements Serializable {
 

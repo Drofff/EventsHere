@@ -12,44 +12,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "MainServlet", urlPatterns = {""})
-public class MainServlet extends HttpServlet {
+@WebServlet(name = "MyEventsServlet", urlPatterns = {"/my"})
+public class MyEventsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String pageNumber = req.getParameter("page");
-
-        Integer page = 0;
-
-        if (pageNumber != null) {
-            page = Integer.parseInt(pageNumber);
-        }
-
         EventsService eventsService = EventsService.getInstance(req.getSession());
 
-        req.setAttribute("events", eventsService.findAll(page));
+        Long userId = (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-        Long pagesCount = eventsService.getPagesCount();
+        req.setAttribute("events", eventsService.findByOwner(userId));
 
-        if (pagesCount > page) {
-            req.setAttribute("nextPage", page + 1);
-        }
-
-        if (page > 0 && pagesCount > 0) {
-            req.setAttribute("prevPage", page - 1);
-        }
+        req.setAttribute("history", eventsService.getHistoryOf(userId));
 
         ProfileService profileService = ProfileService.getInstance(req.getSession());
 
-        Profile profile = profileService.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        Profile profile = profileService.findByOwnerId(userId);
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.getRequestDispatcher("/index.jsp").include(req, resp);
+        req.getRequestDispatcher("/myEventsPage.jsp").include(req, resp);
 
     }
 }

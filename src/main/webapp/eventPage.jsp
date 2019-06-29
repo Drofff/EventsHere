@@ -16,6 +16,25 @@
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 </head>
 <body style="background-image : url(https://visiteurope.com/wp-content/uploads/Events4.jpg); background-size: 100% 100%;">
+<script>
+
+function visit() {
+
+    $('.ui.basic.modal')
+      .modal('show')
+    ;
+
+}
+
+function unvisit() {
+
+        $('.ui.tiny.modal')
+          .modal('show')
+        ;
+
+}
+
+</script>
 <div class="ui left fixed vertical menu">
     <c:choose>
         <c:when test="${not empty name}">
@@ -36,15 +55,13 @@
     <a class="item" href="/EventsHere/subscription">Subscription</a>
     <a class="item" href="/EventsHere/logout">Logout</a>
 </div>
-<div class="ui segment" style="margin-left: 20%; margin-top: 3%; width: 50%;">
+<div class="ui segment" style="margin-left: 20%; margin-top: 3%; width: 70%;">
 
 <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
 
 
  <div class="item">
-      <div class="image">
-      <img src="${event.photoUrl}">
- </div>
+      <img class="ui large rounded image" src="${event.photoUrl}">
  <div class="content">
    <h2 class="header" style="margin-top: 5%; margin-bottom: 5%;">${event.name}</h2>
      <div class="meta" style="margin-bottom: 5%;">
@@ -53,6 +70,12 @@
         <span>Provided by ${event.owner.firstName} ${event.owner.lastName}</span>
        </span>
      </div>
+     <c:if test="${not empty member && member}">
+        <div class="ui left icon input" style="margin-bottom:5%;">
+          <input type="text" readonly value="${event.owner.phoneNumber}" placeholder="Contact phone">
+          <i class="mobile icon"></i>
+        </div>
+     </c:if>
      <div class="description" style="margin-bottom: 5%;">
         ${event.description}
      </div>
@@ -64,6 +87,10 @@
       </c:forEach>
      </div>
     </div>
+
+    <div class="ui label" style="margin-bottom: 5%; margin-top: 5%;">
+                <i class="calendar icon"></i> ${event.dateTime}
+              </div>
 
     <h4 class="header">Members:</h4>
     <div class="ui middle aligned selection list" style="margin-bottom: 5%;">
@@ -87,10 +114,62 @@
         </a>
      </div>
 
+    <c:if test="${empty member}">
+       <div class="ui right floated primary button" onclick="visit()" >
+           Visit
+        <i class="right chevron icon"></i>
+       </div>
+   </c:if>
 
-   <div class="ui right floated primary button">
-       Visit
-    <i class="right chevron icon"></i>
+   <c:if test="${not empty member}">
+        <div class="ui right floated primary button" onclick="unvisit()" >
+           You are already member
+        </div>
+   </c:if>
+
+   <div class="ui basic modal">
+     <div class="ui icon header">
+       <i class="user plus icon"></i>
+       Join ${event.name}
+     </div>
+     <div class="content">
+       <p>Please, mention that by accepting this you accept that your membership in this event will be displayed to other users.
+        Also, you have to understand that administrators of this event expect your attendance</p>
+     </div>
+     <div class="actions">
+       <div class="ui red basic cancel inverted button">
+         <i class="remove icon"></i>
+         Cancel
+       </div>
+       <a class="ui green ok inverted button" href="/EventsHere/visit?${event.id}">
+         <i class="checkmark icon"></i>
+         Confirm
+       </a>
+     </div>
+   </div>
+
+   <div class="ui tiny modal">
+     <i class="close icon"></i>
+     <div class="header">
+       Cancel visit
+     </div>
+     <div class="image content">
+       <div class="description">
+         <div class="ui header">You do not want to visit this event anymore?</div>
+       </div>
+     </div>
+     <form action="/EventsHere/visit" method="post" style="margin-bottom: 3%; margin-left: 6%;">
+     <div class="actions">
+       <div class="ui black deny button">
+         Cancel
+       </div>
+            <input type="hidden" name="id" value="${event.id}"/>
+           <button class="ui positive right labeled icon button" type="submit">
+             Yep, I will not go
+             <i class="checkmark icon"></i>
+           </button>
+     </div>
+      </form>
    </div>
 
 

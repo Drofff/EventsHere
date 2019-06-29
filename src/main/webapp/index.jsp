@@ -31,7 +31,7 @@
     <a class="item" href="/EventsHere/subscription">Subscription</a>
     <a class="item" href="/EventsHere/logout">Logout</a>
 </div>
-<div class="ui segment" style="margin-left: 20%; margin-top: 10%; width: 50%;">
+<div class="ui segment" style="margin-left: 20%; margin-top: 5%; width: 70%;">
 
 <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
 
@@ -58,19 +58,22 @@
         <c:when test="${not empty events}">
               <c:forEach var="event" items="${events}">
 
-                  <div class="item">
-                    <div class="image">
+                  <div class="item" style="margin-top:4%;">
+                    <div class="ui large small">
                       <img src="${event.photoUrl}">
                     </div>
-                    <div class="content">
-                      <a class="header" href="/EventsHere/event?id=${event.id}">${event.name}</a>
+                    <div class="content" style="margin-left: 5%;">
+                      <a class="header" href="/EventsHere/event?id=${event.id}" style="margin-bottom:4%; margin-top:2%;">${event.name}</a>
                       <div class="meta">
                         <span class="cinema">
                             <img class="ui avatar image" src="${event.owner.photoUrl}">
                             <span>${event.owner.firstName} ${event.owner.lastName}</span>
                         </span>
                       </div>
-                      <div class="description">
+                      <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
+                           <i class="calendar icon"></i> ${event.dateTime}
+                      </div>
+                      <div class="description" style="margin-bottom: 5%;">
                         ${event.description}
                       </div>
                       <div class="extra">
@@ -80,7 +83,7 @@
                             </a>
                         </c:forEach>
                       </div>
-                      <div class="extra">
+                      <div class="extra" style="margin-bottom: 7%;">
                            <div class="ui label"><i class="users icon"></i> ${ fn:length(event.getMembers()) } Members</div>
                       </div>
                       <div class="extra">

@@ -1,5 +1,8 @@
-package dto;
+package entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -7,12 +10,15 @@ public class Event {
 
     private Long id;
 
+    @NotBlank(message = "Please, enter event's name")
     private String name;
 
+    @NotBlank(message = "Describe your event")
     private String description;
 
     private List<String> hashTags;
 
+    @NotNull(message = "Please, specify date")
     private LocalDateTime dateTime;
 
     private List<Profile> members;
@@ -21,6 +27,7 @@ public class Event {
 
     private List<Profile> likes;
 
+    @NotBlank(message = "Please, provide photo (url)")
     private String photoUrl;
 
     public Long getId() {

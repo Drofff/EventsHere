@@ -1,4 +1,4 @@
-package dto;
+package entity;
 
 import java.util.List;
 
@@ -12,11 +12,21 @@ public class Profile {
 
     private Long userId;
 
+    private String phoneNumber;
+
     private String photoUrl;
 
     private List<User> subscribers;
 
     private List<User> subscriptions;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public Long getId() {
         return id;

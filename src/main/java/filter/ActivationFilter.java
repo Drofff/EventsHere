@@ -1,7 +1,9 @@
 package filter;
 
 import bean.AuthenticationService;
+import bean.ProfileService;
 import bean.UserDataService;
+import entity.Profile;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -43,7 +45,7 @@ public class ActivationFilter implements Filter {
 
         }
 
-        chain.doFilter(request, response);
+        chain.doFilter(httpServletRequest, response);
 
     }
 
