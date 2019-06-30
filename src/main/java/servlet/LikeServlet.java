@@ -1,7 +1,7 @@
 package servlet;
 
-import bean.AuthenticationService;
-import bean.EventsService;
+import dto.EventDto;
+import service.AuthenticationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +20,9 @@ public class LikeServlet extends HttpServlet {
 
             Long eventId = Long.parseLong(req.getParameter("id"));
 
-            EventsService eventsService = EventsService.getInstance(req.getSession());
+            EventDto eventDto = EventDto.getInstance(req.getSession());
 
-            eventsService.likeEvent(eventId, (Long)req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+            eventDto.like(eventId, (Long)req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         } catch (Exception e) {}
 

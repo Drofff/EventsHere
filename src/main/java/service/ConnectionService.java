@@ -1,4 +1,4 @@
-package bean;
+package service;
 
 import java.io.Serializable;
 import java.sql.Connection;

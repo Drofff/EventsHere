@@ -1,9 +1,9 @@
 package servlet;
 
-import bean.AuthenticationService;
-import bean.ForgotService;
-import bean.MailService;
-import bean.UserDataService;
+import dto.UserDto;
+import service.AuthenticationService;
+import service.MailService;
+import service.TokenService;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -23,14 +23,14 @@ public class ForgotServlet extends HttpServlet {
 
         if (token != null) {
 
-            ForgotService forgotService = ForgotService.getInstance();
-            UserDataService userDataService = UserDataService.getInstance(req.getSession());
+            TokenService tokenService = TokenService.getInstance();
+            UserDto userDto = UserDto.getInstance(req.getSession());
 
-            String email = forgotService.checkToken(token);
+            String email = tokenService.use(token);
 
             if (email != null && !email.isEmpty()) {
 
-                Long userId = userDataService.findUserByUsername(email);
+                Long userId = userDto.findByUsername(email);
 
                 if (userId != null) {
 
@@ -61,11 +61,11 @@ public class ForgotServlet extends HttpServlet {
 
         if (email != null && authenticationService.userExists(email)) {
 
-            ForgotService forgotService = ForgotService.getInstance();
+            TokenService tokenService = TokenService.getInstance();
 
             MailService mailService = MailService.getInstance();
 
-            String token = forgotService.generateToken(email);
+            String token = tokenService.generate(email);
 
             try {
 

@@ -1,8 +1,7 @@
 package servlet;
 
-import bean.AuthenticationService;
-import bean.ForgotService;
-import bean.UserDataService;
+import dto.UserDto;
+import service.AuthenticationService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +17,7 @@ public class ForgotChangePasswordServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String password = req.getParameter("password");
         String repeatedPassword = req.getParameter("rpassword");
 
@@ -39,9 +39,9 @@ public class ForgotChangePasswordServlet extends HttpServlet {
 
             HttpSession httpSession = req.getSession(false);
 
-            UserDataService userDataService = UserDataService.getInstance(httpSession);
+            UserDto userDto = UserDto.getInstance(httpSession);
 
-            userDataService.changePassword((Long) httpSession.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY), password);
+            userDto.changePassword((Long) httpSession.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY), password);
 
             resp.sendRedirect("/EventsHere?message=Saved!");
 

@@ -1,9 +1,9 @@
 package servlet;
 
-import bean.AuthenticationService;
-import bean.EventsService;
-import bean.ProfileService;
+import dto.EventDto;
+import dto.ProfileDto;
 import entity.Profile;
+import service.AuthenticationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,17 +18,17 @@ public class MyEventsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+        EventDto eventDto = EventDto.getInstance(req.getSession());
 
         Long userId = (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-        req.setAttribute("events", eventsService.findByOwner(userId));
+        req.setAttribute("events", eventDto.findByOwner(userId));
 
-        req.setAttribute("history", eventsService.getHistoryOf(userId));
+        req.setAttribute("history", eventDto.getHistoryOf(userId));
 
-        ProfileService profileService = ProfileService.getInstance(req.getSession());
+        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
 
-        Profile profile = profileService.findByOwnerId(userId);
+        Profile profile = profileDto.findByOwnerId(userId);
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());

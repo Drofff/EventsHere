@@ -14,8 +14,8 @@
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
     </div>
-    <a class="item" href="/EventsHere/registration">Registration</a>
-    <a class="item" href="/EventsHere/login">Login</a>
+    <a class="item" href="/EventsHere">Skip</a>
+    <a class="item" href="/EventsHere/login">Logout</a>
 </div>
 <div style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" class="ui segment">
 

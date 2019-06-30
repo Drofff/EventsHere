@@ -1,9 +1,18 @@
 package entity;
 
+import dto.EventDto;
+import dto.HashTagDto;
+import dto.ProfileDto;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 public class Event {
@@ -44,6 +53,16 @@ public class Event {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss");
+
+        if (dateTime.matches(".*\\..*")) {
+            dateTime = dateTime.split("\\.")[0];
+        }
+
+        this.dateTime = LocalDateTime.parse(dateTime, dateTimeFormatter);
     }
 
     public String getName() {
@@ -100,6 +119,52 @@ public class Event {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public static Event parse(ResultSet resultSet, HttpSession session) throws SQLException {
+
+        EventDto eventDto = EventDto.getInstance(session);
+        HashTagDto hashTagDto = HashTagDto.getInstance(session);
+        ProfileDto profileDto = ProfileDto.getInstance(session);
+
+        Long id = resultSet.getLong("id");
+
+        Event event = new Event();
+
+        event.setId(id);
+        event.setDescription(resultSet.getString("description"));
+        event.setName(resultSet.getString("name"));
+        event.setOwner(profileDto.findByOwnerId(resultSet.getLong("owner_id")));
+        event.setPhotoUrl(resultSet.getString("photo_url"));
+        event.setHashTags(hashTagDto.findByEventId(id));
+        event.setLikes(eventDto.getLikes(id));
+        event.setDateTime(resultSet.getString("date_time"));
+        event.setMembers(eventDto.getMembers(id));
+
+        return event;
+    }
+
+    public static Event parse(HttpServletRequest req) {
+
+        Event event = new Event();
+
+        try {
+
+            event.setId(Long.parseLong(req.getParameter("id")));
+
+        } catch (Exception e) {}
+
+        event.setName(req.getParameter("name"));
+        event.setDescription(req.getParameter("description"));
+
+        String dateTime = req.getParameter("dateTime");
+        event.setDateTime(dateTime != null && !dateTime.isEmpty()? LocalDateTime.parse(dateTime) : null);
+
+        event.setPhotoUrl(req.getParameter("photoUrl"));
+
+        event.setHashTags(Arrays.asList(req.getParameterValues("hash")));
+
+        return event;
     }
 
 }

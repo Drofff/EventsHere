@@ -1,6 +1,6 @@
 package filter;
 
-import bean.AuthenticationService;
+import service.AuthenticationService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

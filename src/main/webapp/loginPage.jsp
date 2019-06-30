@@ -5,6 +5,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Events Here - Login</title>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 </head>
@@ -18,21 +20,24 @@
 <form class="ui form" method="post" action="/EventsHere/login" style="margin-left: 20%; margin-top: 10%; width: 50%;">
 <div class="ui segment">
     <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%; margin-right: 5%;">
-<%! Integer count = 0; %>
-<%
 
-    String queryString = request.getQueryString();
+<c:choose>
 
-    if (queryString != null && queryString.equals("error")) {
+<c:when test='${ not empty pageContext.request.queryString && pageContext.request.queryString.equals("error")}'>
+    <c:set var="count" scope="session" value = "${count + 1}" />
+    <div class='ui negative message' style='margin-top: 5%; margin-bottom : 5%;'>
+        <div class='header'>
+            Invalid credentials
+        </div>
+    </div>
+</c:when>
 
-        count++;
-        out.println("<div class='ui negative message' style='margin-top: 5%; margin-bottom : 5%;'><div class='header'>Invalid credentials</div></div>");
+<c:otherwise>
+    <c:set var="count" scope="session" value = "${0}" />
+</c:otherwise>
 
-    } else {
-        count = 0;
-    }
+</c:choose>
 
-%>
     <div class="field" style="margin-bottom: 5%;">
         <label>Email</label>
         <input type="text" required name="username" placeholder="your@mail.com">
@@ -40,13 +45,9 @@
     <div class="field" style="margin-bottom: 5%;">
         <label>Password</label>
         <input type="password" required name="password" placeholder="Password">
-        <%
-
-                if (count >= 2) {
-                    out.println("<h4 class='header'><a href='/EventsHere/forgotPassword'>Forgot your password? We can help!</a></div>");
-                }
-
-        %>
+        <c:if test="${count >= 2}">
+            <h4 class='header'><a href='/EventsHere/forgotPassword'>Forgot your password? We can help!</a></div>
+        </c:if>
     </div>
     <div class="field" style="margin-left: 5%;">
         <div class="ui checkbox" >

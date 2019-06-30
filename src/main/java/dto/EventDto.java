@@ -1,67 +1,40 @@
-package bean;
+package dto;
 
 import entity.Event;
 import entity.Profile;
+import service.ConnectionService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EventsService implements Serializable {
+public class EventDto implements Serializable {
 
-    private static EventsService eventsService;
+    private static EventDto eventDto;
 
     private static Connection connection;
 
-    private static ProfileService profileService;
+    private static HttpSession session;
 
     private static final Integer elementsPerPage = 10;
 
-    private static DateTimeFormatter dateFormatter;
+    private EventDto() {}
 
-    private EventsService() {}
-
-    public static EventsService getInstance(HttpSession session) {
-        if (eventsService == null) {
-            eventsService = new EventsService();
-            profileService = ProfileService.getInstance(session);
-            connection = (Connection) session.getAttribute(ConnectionService.CONNECTION_KEY);
-
-            dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss");
-
+    public static EventDto getInstance(HttpSession httpSession) {
+        if (eventDto == null) {
+            eventDto = new EventDto();
+            connection = (Connection) httpSession.getAttribute(ConnectionService.CONNECTION_KEY);
+            session = httpSession;
         }
-        return eventsService;
-    }
-
-    public LocalDateTime parseDate(String date) {
-
-        if (date.matches(".*\\..*")) {
-            date = date.split("\\.")[0];
-        }
-
-        return LocalDateTime.parse(date, dateFormatter);
-
-    }
-
-    public Long getPagesCount() {
-        try {
-            String query = "select count(*) as num from events where date_time >= ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-            preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-
-            return preparedStatement.executeQuery().getLong("num") / 10;
-        } catch (Exception e) {
-            return 0l;
-        }
+        return eventDto;
     }
 
     public List<Event> findByNameAndTag(String name, List<String> tags) {
@@ -86,7 +59,7 @@ public class EventsService implements Serializable {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                events.add(parseEvent(resultSet));
+                events.add(Event.parse(resultSet, session));
             }
 
         } catch (Exception e) {
@@ -116,7 +89,7 @@ public class EventsService implements Serializable {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                events.add(parseEvent(resultSet));
+                events.add(Event.parse(resultSet, session));
             }
 
         } catch (Exception e) {
@@ -126,65 +99,6 @@ public class EventsService implements Serializable {
         ZoneOffset zoneOffset = ZonedDateTime.now().getOffset();
 
         events.sort((x, y) -> (int) (x.getDateTime().toEpochSecond(zoneOffset) - y.getDateTime().toEpochSecond(zoneOffset)));
-
-        return events;
-
-    }
-
-    public List<String> findAllTags() {
-
-        List<String> tags = new ArrayList<>();
-
-        String query = "select * from hashtag";
-
-        try {
-
-            ResultSet resultSet = connection.createStatement().executeQuery(query);
-
-            while (resultSet.next()) {
-                tags.add(resultSet.getString("name"));
-            }
-
-        } catch (Exception e) {}
-
-        return tags;
-
-    }
-
-    public List<Event> findByHashtag(List<String> ids) {
-
-        List<Event> events = new LinkedList<>();
-
-        String query = "select * from events where date_time >= ? and id in ( select event_id from event_tags where tag_id = ( select id from hashtag where name = ? ) )";
-
-        try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-            for (String tag : ids) {
-
-                preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-                preparedStatement.setString(2, tag);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                while (resultSet.next()) {
-
-                    events.add(parseEvent(resultSet));
-
-                }
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        ZoneOffset zoneOffset = ZonedDateTime.now().getOffset();
-
-        events.sort((x, y) -> (int) (x.getDateTime().toEpochSecond(zoneOffset) - y.getDateTime().toEpochSecond(zoneOffset)));
-
-        events.sort((x, y) -> x.getHashTags().size() - y.getHashTags().size());
 
         return events;
 
@@ -228,6 +142,45 @@ public class EventsService implements Serializable {
 
     }
 
+    public List<Event> findByHashtag(List<String> ids) {
+
+        List<Event> events = new LinkedList<>();
+
+        String query = "select * from events where date_time >= ? and id in ( select event_id from event_tags where tag_id = ( select id from hashtag where name = ? ) )";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            for (String tag : ids) {
+
+                preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                preparedStatement.setString(2, tag);
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+
+                    events.add(Event.parse(resultSet, session));
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ZoneOffset zoneOffset = ZonedDateTime.now().getOffset();
+
+        events.sort((x, y) -> (int) (x.getDateTime().toEpochSecond(zoneOffset) - y.getDateTime().toEpochSecond(zoneOffset)));
+
+        events.sort((x, y) -> x.getHashTags().size() - y.getHashTags().size());
+
+        return events;
+
+    }
+
     public List<Profile> getMembers(Long id) {
 
         List<Profile> profiles = new ArrayList<>();
@@ -244,7 +197,7 @@ public class EventsService implements Serializable {
 
             while (resultSet.next()) {
 
-                profiles.add(ProfileService.parseProfile(resultSet));
+                profiles.add(Profile.parse(resultSet));
 
             }
 
@@ -270,66 +223,12 @@ public class EventsService implements Serializable {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return parseEvent(resultSet);
+                return Event.parse(resultSet, session);
             }
 
         } catch (Exception e) {}
 
         return null;
-
-    }
-
-    public List<Profile> getLikes(Long id) {
-
-        List<Profile> profiles = new ArrayList<>();
-
-        String likesQuery = "select * from profile where id in (select profile_id from event_likes where event_id = ?)";
-
-        try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(likesQuery);
-
-            preparedStatement.setLong(1, id);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-
-                profiles.add(ProfileService.parseProfile(resultSet));
-
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return profiles;
-    }
-
-    public List<String> findHashtagByEventId(Long id) {
-
-        List<String> tags = new ArrayList<>();
-
-        String hashTagsQuery = "select name from hashtag where id in (select tag_id from event_tags where event_id = ?)";
-
-        try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(hashTagsQuery);
-
-            preparedStatement.setLong(1, id);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                tags.add(resultSet.getString("name"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return tags;
 
     }
 
@@ -417,51 +316,6 @@ public class EventsService implements Serializable {
 
     }
 
-    public void delete(Event event) {
-        deleteById(event.getId());
-    }
-
-    public void deleteById(Long id) {
-
-        List<String> queries = Arrays.asList("delete from events where id = ?", "delete from event_tags where event_id = ?",
-                                            "delete from event_members where event_id = ?", "delete from event_likes where event_id = ?");
-
-        try {
-
-            for (String query : queries) {
-
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-                preparedStatement.setLong(1, id);
-
-                preparedStatement.executeUpdate();
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void addTag(String name) {
-
-        String query = "insert into hashtag (name) values (?)";
-
-        try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-            preparedStatement.setString(1, name);
-
-            preparedStatement.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public List<Event> getHistoryOf(Long userId) {
 
         String query = "select * from events where owner_id = ? and date_time < ?";
@@ -478,7 +332,7 @@ public class EventsService implements Serializable {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                events.add(parseEvent(resultSet));
+                events.add(Event.parse(resultSet, session));
             }
 
         } catch (Exception e) {
@@ -509,7 +363,7 @@ public class EventsService implements Serializable {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                events.add(parseEvent(resultSet));
+                events.add(Event.parse(resultSet, session));
             }
 
         } catch (Exception e) {e.printStackTrace();}
@@ -518,51 +372,34 @@ public class EventsService implements Serializable {
 
     }
 
-    public Event parseEvent(ResultSet resultSet) throws SQLException {
-
-        Long id = resultSet.getLong("id");
-
-        Event event = new Event();
-
-        event.setId(id);
-        event.setDescription(resultSet.getString("description"));
-        event.setName(resultSet.getString("name"));
-        event.setOwner(profileService.findByOwnerId(resultSet.getLong("owner_id")));
-        event.setPhotoUrl(resultSet.getString("photo_url"));
-        event.setHashTags(findHashtagByEventId(id));
-        event.setLikes(getLikes(id));
-        event.setDateTime(parseDate(resultSet.getString("date_time")));
-        event.setMembers(getMembers(id));
-
-        return event;
-
+    public void delete(Event event) {
+        deleteById(event.getId());
     }
 
-    public Event parseEvent(HttpServletRequest req) {
+    public void deleteById(Long id) {
 
-        Event event = new Event();
+        List<String> queries = Arrays.asList("delete from events where id = ?", "delete from event_tags where event_id = ?",
+                "delete from event_members where event_id = ?", "delete from event_likes where event_id = ?");
 
         try {
 
-            event.setId(Long.parseLong(req.getParameter("id")));
+            for (String query : queries) {
 
-        } catch (Exception e) {}
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
 
-        event.setName(req.getParameter("name"));
-        event.setDescription(req.getParameter("description"));
+                preparedStatement.setLong(1, id);
 
-        String dateTime = req.getParameter("dateTime");
-        event.setDateTime(dateTime != null && !dateTime.isEmpty()? LocalDateTime.parse(dateTime) : null);
+                preparedStatement.executeUpdate();
 
-        event.setPhotoUrl(req.getParameter("photoUrl"));
+            }
 
-        event.setHashTags(Arrays.asList(req.getParameterValues("hash")));
-
-        return event;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void likeEvent(Long eventId, Long userId) {
+    public void like(Long eventId, Long userId) {
 
         String checkQuery = "select * from event_likes where event_id = ? and profile_id = (select id from profile where user_id = ?)";
 
@@ -600,10 +437,51 @@ public class EventsService implements Serializable {
             }
 
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
     }
 
+    public List<Profile> getLikes(Long id) {
+
+        List<Profile> profiles = new ArrayList<>();
+
+        String likesQuery = "select * from profile where id in (select profile_id from event_likes where event_id = ?)";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(likesQuery);
+
+            preparedStatement.setLong(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+
+                profiles.add(Profile.parse(resultSet));
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return profiles;
+    }
+
+    public Long getPagesCount() {
+        try {
+            String query = "select count(*) as num from events where date_time >= ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+
+            return preparedStatement.executeQuery().getLong("num") / 10;
+        } catch (Exception e) {
+            return 0l;
+        }
+    }
 
 }

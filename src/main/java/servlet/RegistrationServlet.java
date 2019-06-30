@@ -1,10 +1,10 @@
 package servlet;
 
-import bean.ActivationService;
-import bean.AuthenticationService;
-import bean.UserDataService;
-import bean.ValidationService;
+import dto.UserDto;
 import entity.User;
+import service.ActivationService;
+import service.AuthenticationService;
+import service.ValidationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,17 +25,17 @@ public class RegistrationServlet extends HttpServlet {
 
             ActivationService activationService = ActivationService.getInstance();
 
-            String email = activationService.activateByToken(token);
+            String email = activationService.use(token);
 
             if (!email.equals("")) {
 
-                UserDataService userDataService = UserDataService.getInstance(req.getSession());
+                UserDto userDto = UserDto.getInstance(req.getSession());
 
-                Long id = userDataService.findUserByUsername(email);
+                Long id = userDto.findByUsername(email);
 
                 if (id != null) {
 
-                    userDataService.activate(email);
+                    userDto.activate(email);
                     req.getSession().setAttribute(AuthenticationService.USER_AUTHENTICATION_KEY, id);
 
                     req.getRequestDispatcher("/pageActivated.html").include(req, resp);
@@ -61,7 +61,7 @@ public class RegistrationServlet extends HttpServlet {
 
         ValidationService validationService = ValidationService.getInstance(req.getSession());
         AuthenticationService authenticationService = AuthenticationService.getInstance(req.getSession());
-        UserDataService userDataService = UserDataService.getInstance(req.getSession());
+        UserDto userDto = UserDto.getInstance(req.getSession());
 
         if (validationService.validateEmail(email)) {
 
@@ -75,7 +75,7 @@ public class RegistrationServlet extends HttpServlet {
                         user.setUsername(email);
                         user.setPassword(password);
 
-                        userDataService.save(user);
+                        userDto.save(user);
 
                         ActivationService activationService = ActivationService.getInstance();
                         activationService.sendActivationMail(user.getUsername());

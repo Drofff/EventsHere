@@ -1,7 +1,7 @@
-package bean;
-
+package dto;
 
 import entity.User;
+import service.ConnectionService;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
@@ -9,27 +9,27 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class UserDataService implements Serializable {
+public class UserDto implements Serializable {
 
-    private static UserDataService userDataService;
+    private static UserDto userDto;
     private static Connection connection;
 
-    private UserDataService(HttpSession session) {
-        this.connection = (Connection)session.getAttribute(ConnectionService.CONNECTION_KEY);
+    private UserDto(HttpSession session) {
+        connection = (Connection)session.getAttribute(ConnectionService.CONNECTION_KEY);
     }
 
-    public static UserDataService getInstance(HttpSession session) {
+    public static UserDto getInstance(HttpSession session) {
 
-        if (userDataService == null) {
+        if (userDto == null) {
 
-            userDataService = new UserDataService(session);
+            userDto = new UserDto(session);
 
         }
 
-        return userDataService;
+        return userDto;
     }
 
-    public Long findUserByUsername(String username) {
+    public Long findByUsername(String username) {
 
         String query = "select * from user_info where username = ?";
 
@@ -128,6 +128,5 @@ public class UserDataService implements Serializable {
         return false;
 
     }
-
 
 }

@@ -1,4 +1,4 @@
-package bean;
+package service;
 
 import javax.mail.*;
 import javax.mail.internet.*;

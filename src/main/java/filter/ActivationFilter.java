@@ -1,9 +1,7 @@
 package filter;
 
-import bean.AuthenticationService;
-import bean.ProfileService;
-import bean.UserDataService;
-import entity.Profile;
+import dto.UserDto;
+import service.AuthenticationService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -34,9 +32,9 @@ public class ActivationFilter implements Filter {
 
             Long id = (Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-            UserDataService userDataService = UserDataService.getInstance(session);
+            UserDto userDto = UserDto.getInstance(httpServletRequest.getSession());
 
-            if (!userDataService.isActive(id)) {
+            if (!userDto.isActive(id)) {
 
                 httpServletRequest.getRequestDispatcher("/activatePage.html").include(httpServletRequest, response);
                 return;

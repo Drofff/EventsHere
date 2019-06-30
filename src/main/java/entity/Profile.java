@@ -1,5 +1,7 @@
 package entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Profile {
@@ -83,4 +85,19 @@ public class Profile {
     public void setSubscriptions(List<User> subscriptions) {
         this.subscriptions = subscriptions;
     }
+
+    public static Profile parse(ResultSet resultSet) throws SQLException {
+
+        Profile profile = new Profile();
+
+        profile.setId(resultSet.getLong("id"));
+        profile.setPhotoUrl(resultSet.getString("photo_url"));
+        profile.setPhoneNumber(resultSet.getString("phone_number"));
+        profile.setUserId(resultSet.getLong("user_id"));
+        profile.setLastName(resultSet.getString("last_name"));
+        profile.setFirstName(resultSet.getString("first_name"));
+
+        return profile;
+    }
+
 }

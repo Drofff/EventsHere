@@ -1,6 +1,6 @@
 package servlet;
 
-import bean.EventsService;
+import dto.EventDto;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,13 +14,14 @@ public class DeleteEventServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+
+        EventDto eventDto = EventDto.getInstance(req.getSession());
 
         try {
 
             Long id = Long.parseLong(req.getParameter("id"));
 
-            eventsService.deleteById(id);
+            eventDto.deleteById(id);
 
         } catch (Exception e) {}
 

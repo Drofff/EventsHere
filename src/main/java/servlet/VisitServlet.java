@@ -1,7 +1,7 @@
 package servlet;
 
-import bean.AuthenticationService;
-import bean.EventsService;
+import dto.EventDto;
+import service.AuthenticationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +18,7 @@ public class VisitServlet extends HttpServlet {
 
         String id = req.getQueryString();
 
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+        EventDto eventDto = EventDto.getInstance(req.getSession());
 
         if (id != null) {
 
@@ -27,9 +27,9 @@ public class VisitServlet extends HttpServlet {
                 Long eventId = Long.parseLong(id);
                 Long userId = (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-                if (eventsService.findById(eventId).getMembers().stream().noneMatch(x -> x.getUserId().equals(userId))) {
+                if (eventDto.findById(eventId).getMembers().stream().noneMatch(x -> x.getUserId().equals(userId))) {
 
-                    EventsService.getInstance(req.getSession()).visit(eventId, userId);
+                    eventDto.visit(eventId, userId);
 
                 }
 
@@ -49,11 +49,13 @@ public class VisitServlet extends HttpServlet {
 
         String id = req.getParameter("id");
 
+        EventDto eventDto = EventDto.getInstance(req.getSession());
+
         try {
 
             Long eventId = Long.parseLong(id);
 
-            EventsService.getInstance(req.getSession()).cancelVisit(eventId, (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+            eventDto.cancelVisit(eventId, (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         } catch (Exception e) {}
 

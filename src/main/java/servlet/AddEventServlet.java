@@ -1,17 +1,19 @@
 package servlet;
 
-import bean.AuthenticationService;
-import bean.EventsService;
-import bean.ProfileService;
-import bean.ValidationService;
+import dto.EventDto;
+import dto.HashTagDto;
+import dto.ProfileDto;
 import entity.Event;
 import entity.Profile;
+import service.AuthenticationService;
+import service.ValidationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
@@ -21,17 +23,18 @@ public class AddEventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        ProfileService profileService = ProfileService.getInstance(req.getSession());
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+        HashTagDto hashTagDto = HashTagDto.getInstance(req.getSession());
+        EventDto eventDto = EventDto.getInstance(req.getSession());
 
-        Profile profile = profileService.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+        Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.setAttribute("tags", EventsService.getInstance(req.getSession()).findAllTags());
+        req.setAttribute("tags", hashTagDto.findAll());
 
         if (req.getParameter("id") != null) {
 
@@ -39,7 +42,7 @@ public class AddEventServlet extends HttpServlet {
 
                 Long eventId = Long.parseLong(req.getParameter("id"));
 
-                req.setAttribute("oldData", eventsService.findById(eventId));
+                req.setAttribute("oldData", eventDto.findById(eventId));
 
 
             } catch (Exception e) {}
@@ -53,30 +56,33 @@ public class AddEventServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        ProfileService profileService = ProfileService.getInstance(req.getSession());
-        ValidationService validationService = ValidationService.getInstance(req.getSession());
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+        HttpSession session = req.getSession();
 
-        Profile profile = profileService.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        ValidationService validationService = ValidationService.getInstance(session);
+        HashTagDto hashTagDto = HashTagDto.getInstance(session);
+        EventDto eventDto = EventDto.getInstance(session);
+        ProfileDto profileDto = ProfileDto.getInstance(session);
+
+        Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.setAttribute("tags", EventsService.getInstance(req.getSession()).findAllTags());
+        req.setAttribute("tags", hashTagDto.findAll());
 
         try {
 
-            Event event = eventsService.parseEvent(req);
+            Event event = Event.parse(req);
 
             Map<String, String> errors = validationService.validateEvent(event);
 
             if (errors.size() == 0) {
 
-                event.setOwner(profile);
+                event.setOwner(profileDto.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
-                eventsService.save(event);
+                eventDto.save(event);
                 resp.sendRedirect("/EventsHere/my");
                 return;
 
@@ -84,7 +90,9 @@ public class AddEventServlet extends HttpServlet {
 
                 req.setAttribute("oldData", event);
 
-                errors.entrySet().stream().forEach(x -> req.setAttribute(x.getKey(), x.getValue()));
+                for (Map.Entry<String, String> error : errors.entrySet()) {
+                    req.setAttribute(error.getKey(), error.getValue());
+                }
 
                 req.getRequestDispatcher("/addEventPage.jsp").include(req, resp);
                 return;

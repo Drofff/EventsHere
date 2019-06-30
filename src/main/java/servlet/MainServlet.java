@@ -1,9 +1,9 @@
 package servlet;
 
-import bean.AuthenticationService;
-import bean.EventsService;
-import bean.ProfileService;
+import dto.EventDto;
+import dto.ProfileDto;
 import entity.Profile;
+import service.AuthenticationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,11 +26,11 @@ public class MainServlet extends HttpServlet {
             page = Integer.parseInt(pageNumber);
         }
 
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+        EventDto eventDto = EventDto.getInstance(req.getSession());
 
-        req.setAttribute("events", eventsService.findAll(page));
+        req.setAttribute("events", eventDto.findAll(page));
 
-        Long pagesCount = eventsService.getPagesCount();
+        Long pagesCount = eventDto.getPagesCount();
 
         if (pagesCount > page) {
             req.setAttribute("nextPage", page + 1);
@@ -40,9 +40,9 @@ public class MainServlet extends HttpServlet {
             req.setAttribute("prevPage", page - 1);
         }
 
-        ProfileService profileService = ProfileService.getInstance(req.getSession());
+        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
 
-        Profile profile = profileService.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());

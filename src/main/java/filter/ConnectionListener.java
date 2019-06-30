@@ -1,6 +1,6 @@
 package filter;
 
-import bean.ConnectionService;
+import service.ConnectionService;
 
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;

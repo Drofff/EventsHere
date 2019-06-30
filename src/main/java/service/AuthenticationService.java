@@ -1,4 +1,4 @@
-package bean;
+package service;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;

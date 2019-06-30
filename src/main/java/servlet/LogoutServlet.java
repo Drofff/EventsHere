@@ -1,6 +1,6 @@
 package servlet;
 
-import bean.AuthenticationService;
+import service.AuthenticationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -1,6 +1,6 @@
 package servlet;
 
-import bean.EventsService;
+import dto.HashTagDto;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,9 +16,9 @@ public class HashTagServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+        HashTagDto hashTagDto = HashTagDto.getInstance(req.getSession());
 
-        List<String> tags = eventsService.findAllTags();
+        List<String> tags = hashTagDto.findAll();
 
         for (String tag : tags) {
             resp.getWriter().println("<option value='" + tag + "'>" + tag + "</option>\n");
@@ -31,11 +31,11 @@ public class HashTagServlet extends HttpServlet {
 
         String name = req.getParameter("name");
 
-        EventsService eventsService = EventsService.getInstance(req.getSession());
+        HashTagDto hashTagDto = HashTagDto.getInstance(req.getSession());
 
-        if (name != null && !name.isEmpty() && !eventsService.findAllTags().contains(name)) {
+        if (name != null && !name.isEmpty() && !hashTagDto.findAll().contains(name)) {
 
-            eventsService.addTag(name);
+            hashTagDto.add(name);
 
             resp.getWriter().print(true);
             return;
