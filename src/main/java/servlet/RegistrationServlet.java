@@ -4,6 +4,7 @@ import dto.UserDto;
 import entity.User;
 import service.ActivationService;
 import service.AuthenticationService;
+import service.EncryptingService;
 import service.ValidationService;
 
 import javax.servlet.ServletException;
@@ -38,7 +39,7 @@ public class RegistrationServlet extends HttpServlet {
                     userDto.activate(email);
                     req.getSession().setAttribute(AuthenticationService.USER_AUTHENTICATION_KEY, id);
 
-                    req.getRequestDispatcher("/pageActivated.html").include(req, resp);
+                    resp.sendRedirect("/EventsHere");
 
                     return;
 
@@ -73,7 +74,7 @@ public class RegistrationServlet extends HttpServlet {
 
                         User user = new User();
                         user.setUsername(email);
-                        user.setPassword(password);
+                        user.setPassword(EncryptingService.getInstance().encrypt(password));
 
                         userDto.save(user);
 

@@ -62,7 +62,9 @@ public class AuthenticationService implements Serializable {
 
             preparedStatement.setString(1, username);
 
-            preparedStatement.setString(2, password);
+            String encodedPassword = EncryptingService.getInstance().encrypt(password);
+
+            preparedStatement.setString(2, encodedPassword);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 

@@ -100,6 +100,7 @@
         </c:otherwise>
     </c:choose>
     <a class="item" href="/EventsHere">Home</a>
+    <a class="item" href="/EventsHere/profile">Profile</a>
     <a class="item" href="/EventsHere/my">My Events Here</a>
     <a class="item" href="/EventsHere/popular">Popular</a>
     <a class="item" href="/EventsHere/subscription">Subscription</a>
@@ -185,7 +186,7 @@
         <div class="description">
           <div class="ui right labeled input">
             <label for="hash_tag" class="ui label">#</label>
-            <input type="text" placeholder="#Hashtag" id="hash_tag">
+            <input type="text" placeholder="Hashtag" id="hash_tag">
             <button class="ui teal right labeled icon button" onclick="add_tag()">
                 Add
                 <i class="plus icon"></i>

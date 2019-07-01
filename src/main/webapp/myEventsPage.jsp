@@ -31,6 +31,7 @@
         </c:otherwise>
     </c:choose>
     <a class="item" href="/EventsHere">Home</a>
+    <a class="item" href="/EventsHere/profile">Profile</a>
     <a class="item" href="/EventsHere/my">My Events Here</a>
     <a class="item" href="/EventsHere/popular">Popular</a>
     <a class="item" href="/EventsHere/subscription">Subscription</a>

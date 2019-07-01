@@ -24,7 +24,7 @@ public class EventDto implements Serializable {
 
     private static HttpSession session;
 
-    private static final Integer elementsPerPage = 10;
+    private static final Integer elementsPerPage = 1;
 
     private EventDto() {}
 
@@ -47,7 +47,7 @@ public class EventDto implements Serializable {
 
         Integer leftBound = pageNumber * elementsPerPage;
 
-        String query = "select * from events where date_time >= ? limit 10 offset ?";
+        String query = "select * from events where date_time >= ? limit " + elementsPerPage + " offset ?";
 
         try {
 
@@ -142,6 +142,10 @@ public class EventDto implements Serializable {
 
     }
 
+    private Long intersection(List<String> pattern, List<String> tagsFound) {
+        return pattern.stream().filter(x -> tagsFound.contains(x)).count();
+    }
+
     public List<Event> findByHashtag(List<String> ids) {
 
         List<Event> events = new LinkedList<>();
@@ -175,7 +179,7 @@ public class EventDto implements Serializable {
 
         events.sort((x, y) -> (int) (x.getDateTime().toEpochSecond(zoneOffset) - y.getDateTime().toEpochSecond(zoneOffset)));
 
-        events.sort((x, y) -> x.getHashTags().size() - y.getHashTags().size());
+        events.sort((x, y) -> (int) (intersection(ids , x.getHashTags()) - intersection(ids , y.getHashTags())));
 
         return events;
 
@@ -478,10 +482,15 @@ public class EventDto implements Serializable {
 
             preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
 
-            return preparedStatement.executeQuery().getLong("num") / 10;
-        } catch (Exception e) {
-            return 0l;
-        }
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getLong("num") / elementsPerPage;
+            }
+
+        } catch (Exception e) {}
+
+        return 0l;
     }
 
 }

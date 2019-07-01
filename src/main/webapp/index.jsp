@@ -26,6 +26,7 @@
         </c:otherwise>
     </c:choose>
     <a class="item" href="/EventsHere">Home</a>
+    <a class="item" href="/EventsHere/profile">Profile</a>
     <a class="item" href="/EventsHere/my">My Events Here</a>
     <a class="item" href="/EventsHere/popular">Popular</a>
     <a class="item" href="/EventsHere/subscription">Subscription</a>
@@ -60,14 +61,14 @@
 
                   <div class="item" style="margin-top:4%;">
                     <div class="ui large small">
-                      <img src="${event.photoUrl}">
+                      <img src="${event.photoUrl}" style="width: 500px; height: 300px;">
                     </div>
                     <div class="content" style="margin-left: 5%;">
                       <a class="header" href="/EventsHere/event?id=${event.id}" style="margin-bottom:4%; margin-top:2%;">${event.name}</a>
                       <div class="meta">
                         <span class="cinema">
                             <img class="ui avatar image" src="${event.owner.photoUrl}">
-                            <span>${event.owner.firstName} ${event.owner.lastName}</span>
+                            <span><a href="/EventsHere/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
@@ -115,16 +116,16 @@
 
     </c:choose>
 
-     <c:if test="${not empty nextPage}">
-                        <a class="ui right labeled icon button" href="/EventsHere?page=${nextPage}">
-                          <i class="right arrow icon"></i>
-                          Next
-                        </a>
-                    </c:if>
-            <c:if test="${not empty prevPage}">
-                <a class="ui right labeled icon button" href="/EventsHere?page=${prevPage}">
+            <c:if test="${not empty nextPage}">
+                <a class="ui right labeled icon button" href="/EventsHere?page=${nextPage}">
                   <i class="right arrow icon"></i>
                   Next
+                </a>
+            </c:if>
+            <c:if test="${not empty prevPage}">
+                <a class="ui right labeled icon button" href="/EventsHere?page=${prevPage}">
+                  <i class="left arrow icon"></i>
+                  Previous
                 </a>
             </c:if>
 

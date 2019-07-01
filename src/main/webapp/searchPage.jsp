@@ -39,6 +39,7 @@
         </c:otherwise>
     </c:choose>
     <a class="item" href="/EventsHere">Home</a>
+    <a class="item" href="/EventsHere/profile">Profile</a>
     <a class="item" href="/EventsHere/my">My Events Here</a>
     <a class="item" href="/EventsHere/popular">Popular</a>
     <a class="item" href="/EventsHere/subscription">Subscription</a>
@@ -96,7 +97,7 @@
                       <div class="meta">
                         <span class="cinema">
                             <img class="ui avatar image" src="${event.owner.photoUrl}">
-                            <span>${event.owner.firstName} ${event.owner.lastName}</span>
+                            <span><a href="/EventsHere/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">

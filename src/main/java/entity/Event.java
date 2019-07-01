@@ -162,7 +162,9 @@ public class Event {
 
         event.setPhotoUrl(req.getParameter("photoUrl"));
 
-        event.setHashTags(Arrays.asList(req.getParameterValues("hash")));
+        if (req.getParameter("hash") != null) {
+            event.setHashTags(Arrays.asList(req.getParameterValues("hash")));
+        }
 
         return event;
     }

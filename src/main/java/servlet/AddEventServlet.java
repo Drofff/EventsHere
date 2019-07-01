@@ -76,7 +76,7 @@ public class AddEventServlet extends HttpServlet {
 
             Event event = Event.parse(req);
 
-            Map<String, String> errors = validationService.validateEvent(event);
+            Map<String, String> errors = validationService.validate(event);
 
             if (errors.size() == 0) {
 

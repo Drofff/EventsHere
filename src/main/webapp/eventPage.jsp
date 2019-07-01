@@ -50,6 +50,7 @@ function unvisit() {
         </c:otherwise>
     </c:choose>
     <a class="item" href="/EventsHere">Home</a>
+    <a class="item" href="/EventsHere/profile">Profile</a>
     <a class="item" href="/EventsHere/my">My Events Here</a>
     <a class="item" href="/EventsHere/popular">Popular</a>
     <a class="item" href="/EventsHere/subscription">Subscription</a>
@@ -67,7 +68,7 @@ function unvisit() {
      <div class="meta" style="margin-bottom: 5%;">
        <span class="cinema">
         <img class="ui avatar image" src="${event.owner.photoUrl}">
-        <span>Provided by ${event.owner.firstName} ${event.owner.lastName}</span>
+        <span>Provided by <a href="/EventsHere/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
        </span>
      </div>
      <c:if test="${not empty member && member}">
@@ -95,7 +96,7 @@ function unvisit() {
     <h4 class="header">Members:</h4>
     <div class="ui middle aligned selection list" style="margin-bottom: 5%;">
     <c:forEach var="member" items="${event.getMembers()}">
-      <a class="item" href="/EventsHere/profile/${member.id}">
+      <a class="item" href="/EventsHere/profile?id=${member.id}">
         <img class="ui avatar image" src="${member.photoUrl}">
         <div class="content">
           <div class="header">${member.firstName} ${member.lastName}</div>

@@ -32,7 +32,7 @@ public class MainServlet extends HttpServlet {
 
         Long pagesCount = eventDto.getPagesCount();
 
-        if (pagesCount > page) {
+        if (pagesCount > page + 1) {
             req.setAttribute("nextPage", page + 1);
         }
 
