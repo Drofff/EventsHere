@@ -29,7 +29,7 @@ public class LikeServlet extends HttpServlet {
         if (req.getHeader("referer") != null) {
             resp.sendRedirect(req.getHeader("referer"));
         } else {
-            resp.sendRedirect("/EventsHere");
+            resp.sendRedirect(req.getContextPath());
         }
 
     }

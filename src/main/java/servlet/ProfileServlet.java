@@ -2,6 +2,7 @@ package servlet;
 
 import dto.EventDto;
 import dto.ProfileDto;
+import dto.UserDto;
 import entity.Profile;
 import service.AuthenticationService;
 import service.ValidationService;
@@ -28,9 +29,11 @@ public class ProfileServlet extends HttpServlet {
         Profile currentProfile = profileDto.findByOwnerId(userId);
 
         if (currentProfile == null) {
-            resp.sendRedirect("/EventsHere");
+            resp.sendRedirect(req.getContextPath());
             return;
         }
+
+        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         req.setAttribute("name", currentProfile.getFirstName() + " " + currentProfile.getLastName());
         req.setAttribute("photoUrl", currentProfile.getPhotoUrl());
@@ -62,7 +65,7 @@ public class ProfileServlet extends HttpServlet {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                resp.sendRedirect("/EventsHere");
+                resp.sendRedirect(req.getContextPath());
                 return;
             }
 
@@ -108,7 +111,7 @@ public class ProfileServlet extends HttpServlet {
 
         profileDto.save(profile);
 
-        resp.sendRedirect("/EventsHere");
+        resp.sendRedirect(req.getContextPath());
 
     }
 }

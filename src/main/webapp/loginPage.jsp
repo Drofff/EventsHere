@@ -15,9 +15,9 @@
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
     </div>
-    <a class="item" href="/EventsHere/registration">Registration</a>
+    <a class="item" href="${pageContext.request.contextPath}/registration">Registration</a>
 </div>
-<form class="ui form" method="post" action="/EventsHere/login" style="margin-left: 20%; margin-top: 10%; width: 50%;">
+<form class="ui form" method="post" action="${pageContext.request.contextPath}/login" style="margin-left: 20%; margin-top: 10%; width: 50%;">
 <div class="ui segment">
     <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%; margin-right: 5%;">
 
@@ -46,7 +46,7 @@
         <label>Password</label>
         <input type="password" required name="password" placeholder="Password">
         <c:if test="${count >= 2}">
-            <h4 class='header'><a href='/EventsHere/forgotPassword'>Forgot your password? We can help!</a></div>
+            <h4 class='header'><a href='${pageContext.request.contextPath}/forgotPassword'>Forgot your password? We can help!</a></div>
         </c:if>
     </div>
     <div class="field" style="margin-left: 5%;">

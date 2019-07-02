@@ -24,7 +24,7 @@ public class EventDto implements Serializable {
 
     private static HttpSession session;
 
-    private static final Integer elementsPerPage = 1;
+    private static final Integer elementsPerPage = 10;
 
     private EventDto() {}
 
@@ -243,7 +243,7 @@ public class EventDto implements Serializable {
         String addQuery = "insert into events (name, description, date_time, owner_id, photo_url) values (?, ?, ?, ?, ?) returning id";
         String addHashTagQuery = "insert into event_tags (event_id, tag_id) values (?, ( select id from hashtag where name = ?) )";
 
-        String updateQuery = "update events set name = ?, description = ?, date_time = ?, owner_id = ?, photo_url = ? where id = ?";
+        String updateQuery = "update events set name = ?, description = ?, date_time = ?, photo_url = ? where id = ?";
 
         String deleteTag = "delete from event_tags where event_id = ?";
 
@@ -290,9 +290,8 @@ public class EventDto implements Serializable {
                 updatePreparedStatement.setString(1, event.getName());
                 updatePreparedStatement.setString(2, event.getDescription());
                 updatePreparedStatement.setTimestamp(3, Timestamp.valueOf(event.getDateTime()));
-                updatePreparedStatement.setLong(4, event.getOwner().getUserId());
-                updatePreparedStatement.setString(5, event.getPhotoUrl());
-                updatePreparedStatement.setLong(6, event.getId());
+                updatePreparedStatement.setString(4, event.getPhotoUrl());
+                updatePreparedStatement.setLong(5, event.getId());
 
                 updatePreparedStatement.executeUpdate();
 
@@ -491,6 +490,93 @@ public class EventDto implements Serializable {
         } catch (Exception e) {}
 
         return 0l;
+    }
+
+    public List<Event> findPopularByLikes() {
+
+        String query = "select events.id, count(event_likes.profile_id) from events inner join event_likes on events.id = event_likes.event_id where events.date_time >= NOW() group by events.id order by count(event_likes.profile_id) DESC limit 10";
+
+        List<Event> events = new LinkedList<>();
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                events.add(eventDto.findById(resultSet.getLong("id")));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return events;
+    }
+
+    public Map<String, Event> findPopularByTags() {
+
+        Map<String, Event> events = new LinkedHashMap<>();
+
+        String query = "select hashtag.name, count(event_tags.event_id)  from hashtag inner join event_tags on hashtag.id = event_tags.tag_id group by hashtag.name order by count(event_tags.event_id) DESC limit 5;";
+
+        String eventsQuery = "select * from events join event_tags on events.id = event_tags.event_id where event_tags.tag_id = (select id from hashtag where name = ?) order by events.date_time limit 1";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            PreparedStatement findEventByTag = connection.prepareStatement(eventsQuery);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+
+                String tag = resultSet.getString("name");
+
+                findEventByTag.setString(1, tag);
+
+                ResultSet eventResultSet = findEventByTag.executeQuery();
+
+                if (eventResultSet.next()) {
+                    events.put(tag, Event.parse(eventResultSet, session));
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return events;
+
+    }
+
+    public Integer countActual() {
+        String query = "select count(*) as num from events where date_time >= NOW()";
+        return count(query);
+    }
+
+    public Integer countHistory() {
+        String query = "select count(*) as num from events where date_time < NOW()";
+        return count(query);
+    }
+
+    private Integer count(String query) {
+
+        try {
+            ResultSet resultSet = connection.prepareStatement(query).executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("num");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
 }

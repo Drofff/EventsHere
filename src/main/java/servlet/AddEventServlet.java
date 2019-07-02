@@ -3,8 +3,10 @@ package servlet;
 import dto.EventDto;
 import dto.HashTagDto;
 import dto.ProfileDto;
+import dto.UserDto;
 import entity.Event;
 import entity.Profile;
+import entity.User;
 import service.AuthenticationService;
 import service.ValidationService;
 
@@ -34,6 +36,8 @@ public class AddEventServlet extends HttpServlet {
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
+        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+
         req.setAttribute("tags", hashTagDto.findAll());
 
         if (req.getParameter("id") != null) {
@@ -42,7 +46,14 @@ public class AddEventServlet extends HttpServlet {
 
                 Long eventId = Long.parseLong(req.getParameter("id"));
 
-                req.setAttribute("oldData", eventDto.findById(eventId));
+                Event currentEvent = eventDto.findById(eventId);
+
+                req.setAttribute("oldData", currentEvent);
+
+                if (!currentEvent.getOwner().getUserId().equals(profile.getUserId())) {
+                    resp.sendRedirect(req.getContextPath());
+                    return;
+                }
 
 
             } catch (Exception e) {}
@@ -62,8 +73,10 @@ public class AddEventServlet extends HttpServlet {
         HashTagDto hashTagDto = HashTagDto.getInstance(session);
         EventDto eventDto = EventDto.getInstance(session);
         ProfileDto profileDto = ProfileDto.getInstance(session);
+        UserDto userDto = UserDto.getInstance(session);
 
         Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
@@ -80,10 +93,14 @@ public class AddEventServlet extends HttpServlet {
 
             if (errors.size() == 0) {
 
-                event.setOwner(profileDto.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+                event.setOwner(profile);
+
+                if (!userDto.isAdmin(profile.getUserId()) && !event.getOwner().getUserId().equals(profile.getUserId())) {
+                    resp.sendRedirect(req.getContextPath());
+                }
 
                 eventDto.save(event);
-                resp.sendRedirect("/EventsHere/my");
+                resp.sendRedirect(req.getContextPath() + "/my");
                 return;
 
             } else {
@@ -105,7 +122,7 @@ public class AddEventServlet extends HttpServlet {
 
         String url = req.getHeader("referer");
 
-        resp.sendRedirect(url != null ? url : "/EventsHere/my");
+        resp.sendRedirect(url != null ? url : req.getContextPath() + "/my");
 
     }
 }

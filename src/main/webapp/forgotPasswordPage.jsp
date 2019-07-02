@@ -14,10 +14,10 @@
 <div class="ui left fixed vertical menu">
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png"> </div>
-    <a class="item" href="/EventsHere/registration">Registration</a>
-    <a class="item" href="/EventsHere/login">Login</a>
+    <a class="item" href="${pageContext.request.contextPath}/registration">Registration</a>
+    <a class="item" href="${pageContext.request.contextPath}/login">Login</a>
 </div>
-<form style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" action="/EventsHere/forgotPassword" method="post">
+<form style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" action="${pageContext.request.contextPath}/forgotPassword" method="post">
 <div class="ui segment">
     <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%; margin-right: 5%;">
 

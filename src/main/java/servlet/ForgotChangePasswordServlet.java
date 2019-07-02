@@ -43,7 +43,7 @@ public class ForgotChangePasswordServlet extends HttpServlet {
 
             userDto.changePassword((Long) httpSession.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY), password);
 
-            resp.sendRedirect("/EventsHere?message=Saved!");
+            resp.sendRedirect(req.getContextPath() + "?message=Saved!");
 
         }
 

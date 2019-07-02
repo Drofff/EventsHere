@@ -1,6 +1,7 @@
 package servlet;
 
 import dto.ProfileDto;
+import dto.UserDto;
 import entity.Profile;
 import service.AuthenticationService;
 import service.ValidationService;
@@ -49,6 +50,8 @@ public class EditProfileServlet extends HttpServlet {
         req.setAttribute("name", currentProfile.getFirstName() + " " + currentProfile.getLastName());
         req.setAttribute("photoUrl", currentProfile.getPhotoUrl());
 
+        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+
         String status = req.getParameter("status");
 
         profile.setStatus(status != null || status.isEmpty() ? status : "Using app");
@@ -71,7 +74,7 @@ public class EditProfileServlet extends HttpServlet {
 
         profileDto.save(profile);
 
-        resp.sendRedirect("/EventsHere");
+        resp.sendRedirect(req.getContextPath());
 
     }
 }

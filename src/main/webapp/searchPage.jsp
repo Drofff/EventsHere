@@ -38,18 +38,19 @@
              </div>
         </c:otherwise>
     </c:choose>
-    <a class="item" href="/EventsHere">Home</a>
-    <a class="item" href="/EventsHere/profile">Profile</a>
-    <a class="item" href="/EventsHere/my">My Events Here</a>
-    <a class="item" href="/EventsHere/popular">Popular</a>
-    <a class="item" href="/EventsHere/subscription">Subscription</a>
-    <a class="item" href="/EventsHere/logout">Logout</a>
+    <a class="item" href="${pageContext.request.contextPath}">Home</a>
+    <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
+    <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
+    <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
+    <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
+    <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>
 <div class="ui segment" style="margin-left: 20%; margin-top: 5%; width: 70%;">
 
 <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
 
-<form action="/EventsHere/search" method="get">
+<form action="${pageContext.request.contextPath}/search" method="get">
 
     <div class="ui two column grid">
       <div class="row">
@@ -93,11 +94,11 @@
                       <img src="${event.photoUrl}">
                     </div>
                     <div class="content">
-                      <a class="header" href="/EventsHere/event?id=${event.id}" style="margin-bottom:4%; margin-top:2%;">${event.name}</a>
+                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}" style="margin-bottom:4%; margin-top:2%;">${event.name}</a>
                       <div class="meta">
                         <span class="cinema">
                             <img class="ui avatar image" src="${event.owner.photoUrl}">
-                            <span><a href="/EventsHere/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
+                            <span><a href="${pageContext.request.contextPath}/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
@@ -108,7 +109,7 @@
                       </div>
                       <div class="extra">
                         <c:forEach var="tag" items="${event.hashTags}">
-                         <a href="/EventsHere/search?tag=${tag}">
+                         <a href="${pageContext.request.contextPath}/search?tag=${tag}">
                             <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
                          </a>
                         </c:forEach>
@@ -119,7 +120,7 @@
                       <div class="extra">
 
                                  <div class="ui labeled button" tabindex="0">
-                                     <a class="ui red button" href="/EventsHere/like?id=${event.id}">
+                                     <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.id}">
                                        <i class="heart icon"></i> Like
                                      </a>
                                      <a class="ui basic red left pointing label">
@@ -128,7 +129,7 @@
                                  </div>
 
 
-                              <a class="ui right floated primary button" href="/EventsHere/event?id=${event.id}" >
+                              <a class="ui right floated primary button" href="${pageContext.request.contextPath}/event?id=${event.id}" >
                                 Visit
                                 <i class="right chevron icon"></i>
                               </a>
@@ -146,13 +147,13 @@
     </c:choose>
 
      <c:if test="${not empty nextPage}">
-                        <a class="ui right labeled icon button" href="/EventsHere?page=${nextPage}">
+                        <a class="ui right labeled icon button" href="${pageContext.request.contextPath}?page=${nextPage}">
                           <i class="right arrow icon"></i>
                           Next
                         </a>
                     </c:if>
             <c:if test="${not empty prevPage}">
-                <a class="ui right labeled icon button" href="/EventsHere?page=${prevPage}">
+                <a class="ui right labeled icon button" href="${pageContext.request.contextPath}?page=${prevPage}">
                   <i class="right arrow icon"></i>
                   Next
                 </a>

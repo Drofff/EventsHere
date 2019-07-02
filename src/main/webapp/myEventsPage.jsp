@@ -30,18 +30,19 @@
              </div>
         </c:otherwise>
     </c:choose>
-    <a class="item" href="/EventsHere">Home</a>
-    <a class="item" href="/EventsHere/profile">Profile</a>
-    <a class="item" href="/EventsHere/my">My Events Here</a>
-    <a class="item" href="/EventsHere/popular">Popular</a>
-    <a class="item" href="/EventsHere/subscription">Subscription</a>
-    <a class="item" href="/EventsHere/logout">Logout</a>
+    <a class="item" href="${pageContext.request.contextPath}">Home</a>
+    <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
+    <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
+    <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
+    <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
+    <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>
 <div class="ui segment" style="margin-left: 20%; margin-top: 3%; width: 70%;">
 
 <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
 
-<a class="ui animated button" tabindex="0" href="/EventsHere/save" style="margin-left: 80%;">
+<a class="ui animated button" tabindex="0" href="${pageContext.request.contextPath}/save" style="margin-left: 80%;">
   <div class="visible content">Add event</div>
   <div class="hidden content">
     <i class="right arrow icon"></i>
@@ -74,8 +75,8 @@
     </div>
     <div class="extra content">
       <div class="ui two buttons">
-        <a class="ui basic green button" href="/EventsHere/save?id=${event.id}">Edit</a>
-        <a class="ui basic red button" href="/EventsHere/delete?id=${event.id}">Delete</a>
+        <a class="ui basic green button" href="${pageContext.request.contextPath}/save?id=${event.id}">Edit</a>
+        <a class="ui basic red button" href="${pageContext.request.contextPath}/delete?id=${event.id}">Delete</a>
       </div>
     </div>
   </div>

@@ -30,12 +30,13 @@
              </div>
         </c:otherwise>
     </c:choose>
-    <a class="item" href="/EventsHere">Home</a>
-    <a class="item" href="/EventsHere/profile">Profile</a>
-    <a class="item" href="/EventsHere/my">My Events Here</a>
-    <a class="item" href="/EventsHere/popular">Popular</a>
-    <a class="item" href="/EventsHere/subscription">Subscription</a>
-    <a class="item" href="/EventsHere/logout">Logout</a>
+    <a class="item" href="${pageContext.request.contextPath}">Home</a>
+    <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
+    <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
+    <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
+    <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
+    <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>
 
     <div class="ui segment" style="margin-left: 20%; margin-top: 3%; width: 70%;">
@@ -58,15 +59,15 @@
 
             <c:choose>
                             <c:when test="${not empty subscriber && subscriber}">
-                                <a class="ui green button" href="/EventsHere/subscribe?id=${profile.id}">
+                                <a class="ui green button" href="${pageContext.request.contextPath}/subscribe?id=${profile.id}">
                                         Already subscriber
                                 </a>
                             </c:when>
                             <c:when test="${not empty me && me}">
-                                <a href="/EventsHere/editProfile">Edit</a>
+                                <a href="${pageContext.request.contextPath}/editProfile">Edit</a>
                             </c:when>
                             <c:otherwise>
-                                 <a class="ui primary button" href="/EventsHere/subscribe?id=${profile.id}">
+                                 <a class="ui primary button" href="${pageContext.request.contextPath}/subscribe?id=${profile.id}">
                                         Subscribe
                                  </a>
                             </c:otherwise>
@@ -102,10 +103,10 @@
 
                 <c:forEach var="event" items="${events}">
 
-                      <div class="item">
+                      <div class="item" style="margin-top: 5%;">
                         <img class="ui avatar image" src="${event.photoUrl}">
                         <div class="content">
-                          <a class="header" href="/EventsHere/event?id=${event.id}">${event.name}</a>
+                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}">${event.name}</a>
                           <div class="description">${fn:length(event.getMembers())} Members</div>
                         </div>
 

@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 
         if (id == AuthenticationService.FAILURE_CODE) {
 
-            resp.sendRedirect("/EventsHere/login?error");
+            resp.sendRedirect(req.getContextPath() + "/login?error");
             return;
 
         }
@@ -58,7 +58,7 @@ public class LoginServlet extends HttpServlet {
             session.removeAttribute("redirect_to");
             resp.sendRedirect(redirectUrl);
         } else {
-            resp.sendRedirect("/EventsHere");
+            resp.sendRedirect(req.getContextPath());
         }
 
     }

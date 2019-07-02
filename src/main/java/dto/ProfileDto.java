@@ -78,6 +78,32 @@ public class ProfileDto implements Serializable {
 
     }
 
+    public List<Profile> findAll() {
+
+        List<Profile> profiles = new ArrayList<>();
+
+        String query = "select * from profile";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+
+                profiles.add(Profile.parse(resultSet));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return profiles;
+
+    }
+
     public Profile findById(Long id) {
 
         String query = "select * from profile where id = ?";

@@ -49,12 +49,13 @@ function unvisit() {
              </div>
         </c:otherwise>
     </c:choose>
-    <a class="item" href="/EventsHere">Home</a>
-    <a class="item" href="/EventsHere/profile">Profile</a>
-    <a class="item" href="/EventsHere/my">My Events Here</a>
-    <a class="item" href="/EventsHere/popular">Popular</a>
-    <a class="item" href="/EventsHere/subscription">Subscription</a>
-    <a class="item" href="/EventsHere/logout">Logout</a>
+    <a class="item" href="${pageContext.request.contextPath}">Home</a>
+    <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
+    <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
+    <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
+    <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
+    <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>
 <div class="ui segment" style="margin-left: 20%; margin-top: 3%; width: 70%;">
 
@@ -68,7 +69,7 @@ function unvisit() {
      <div class="meta" style="margin-bottom: 5%;">
        <span class="cinema">
         <img class="ui avatar image" src="${event.owner.photoUrl}">
-        <span>Provided by <a href="/EventsHere/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
+        <span>Provided by <a href="${pageContext.request.contextPath}/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
        </span>
      </div>
      <c:if test="${not empty member && member}">
@@ -82,7 +83,7 @@ function unvisit() {
      </div>
      <div class="extra">
       <c:forEach var="tag" items="${event.hashTags}">
-       <a href="/EventsHere/search?tag=${tag}">
+       <a href="${pageContext.request.contextPath}/search?tag=${tag}">
          <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
        </a>
       </c:forEach>
@@ -96,7 +97,7 @@ function unvisit() {
     <h4 class="header">Members:</h4>
     <div class="ui middle aligned selection list" style="margin-bottom: 5%;">
     <c:forEach var="member" items="${event.getMembers()}">
-      <a class="item" href="/EventsHere/profile?id=${member.id}">
+      <a class="item" href="${pageContext.request.contextPath}/profile?id=${member.id}">
         <img class="ui avatar image" src="${member.photoUrl}">
         <div class="content">
           <div class="header">${member.firstName} ${member.lastName}</div>
@@ -107,7 +108,7 @@ function unvisit() {
 
 
      <div class="ui labeled button" tabindex="0">
-        <a class="ui red button" href="/EventsHere/like?id=${event.id}">
+        <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.id}">
             <i class="heart icon"></i> Like
         </a>
         <a class="ui basic red left pointing label">
@@ -142,7 +143,7 @@ function unvisit() {
          <i class="remove icon"></i>
          Cancel
        </div>
-       <a class="ui green ok inverted button" href="/EventsHere/visit?${event.id}">
+       <a class="ui green ok inverted button" href="${pageContext.request.contextPath}/visit?${event.id}">
          <i class="checkmark icon"></i>
          Confirm
        </a>
@@ -159,7 +160,7 @@ function unvisit() {
          <div class="ui header">You do not want to visit this event anymore?</div>
        </div>
      </div>
-     <form action="/EventsHere/visit" method="post" style="margin-bottom: 3%; margin-left: 6%;">
+     <form action="${pageContext.request.contextPath}/visit" method="post" style="margin-bottom: 3%; margin-left: 6%;">
      <div class="actions">
        <div class="ui black deny button">
          Cancel

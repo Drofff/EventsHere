@@ -14,8 +14,8 @@
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
     </div>
-    <a class="item" href="/EventsHere">Skip</a>
-    <a class="item" href="/EventsHere/login">Logout</a>
+    <a class="item" href="${pageContext.request.contextPath}">Skip</a>
+    <a class="item" href="${pageContext.request.contextPath}/login">Logout</a>
 </div>
 <div style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" class="ui segment">
 
@@ -26,7 +26,7 @@
   </div>
 </h2>
 
-<form class="ui form" method="post" action="/EventsHere/forgotChangePassword" style="margin-left: 5%; margin-right: 5%; margin-bottom: 5%;">
+<form class="ui form" method="post" action="${pageContext.request.contextPath}/forgotChangePassword" style="margin-left: 5%; margin-right: 5%; margin-bottom: 5%;">
     <h4 class="ui header" style="margin-bottom: 3%;">Please enter new password</h4>
   <div class='field <c:if test="${not empty lengthError || not empty passwordMismatch}">error</c:if>'>
     <label>New password</label>

@@ -2,6 +2,7 @@ package servlet;
 
 import dto.EventDto;
 import dto.ProfileDto;
+import dto.UserDto;
 import entity.Event;
 import entity.Profile;
 import service.AuthenticationService;
@@ -32,6 +33,8 @@ public class EventServlet extends HttpServlet {
 
             Profile profile = profileDto.findByOwnerId( (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
+            req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+
             if (profile != null) {
 
                 req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
@@ -46,7 +49,7 @@ public class EventServlet extends HttpServlet {
             req.getRequestDispatcher("/eventPage.jsp").include(req, resp);
 
         } catch (Exception e) {
-            resp.sendRedirect("/EventsHere");
+            resp.sendRedirect(req.getContextPath());
         }
 
     }

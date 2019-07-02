@@ -43,7 +43,7 @@ public class ForgotServlet extends HttpServlet {
 
             }
 
-            resp.sendRedirect("/EventsHere/forgotPassword?message=Wrong recovery token");
+            resp.sendRedirect(req.getContextPath() + "/forgotPassword?message=Wrong recovery token");
             return;
 
         }
@@ -73,7 +73,7 @@ public class ForgotServlet extends HttpServlet {
 
             } catch (MessagingException e) {
 
-                resp.sendRedirect("/EventsHere/forgotPassword?message=Sorry, SMTP Server Error. Please, try later");
+                resp.sendRedirect(req.getContextPath() + "/forgotPassword?message=Sorry, SMTP Server Error. Please, try later");
                 e.printStackTrace();
                 return;
 
@@ -84,7 +84,7 @@ public class ForgotServlet extends HttpServlet {
 
         }
 
-        resp.sendRedirect("/EventsHere/forgotPassword?message=User with such email do not exists");
+        resp.sendRedirect(req.getContextPath() + "/forgotPassword?message=User with such email do not exists");
 
     }
 }

@@ -40,7 +40,7 @@ public class VisitServlet extends HttpServlet {
 
         String url = req.getHeader("referer");
 
-        resp.sendRedirect(url != null? url : "/EventsHere");
+        resp.sendRedirect(url != null? url : req.getContextPath());
 
     }
 
@@ -61,6 +61,6 @@ public class VisitServlet extends HttpServlet {
 
         String url = req.getHeader("referer");
 
-        resp.sendRedirect(url != null? url : "/EventsHere");
+        resp.sendRedirect(url != null? url : req.getContextPath());
     }
 }

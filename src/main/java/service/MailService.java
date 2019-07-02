@@ -50,6 +50,16 @@ public class MailService implements Serializable {
 
     }
 
+    public void sendBlockedWarning(String email, String reason) throws MessagingException {
+
+        String message = "Dear, User! You were blocked by administrator because of: " + reason;
+
+        MimeMessage mimeMessage = getMimeMessage(email, "Blocked account", message);
+
+        Transport.send(mimeMessage);
+
+    }
+
     public void sendRecoveryToken(String email, String token) throws MessagingException {
 
         String link = "http://localhost:8080/EventsHere/forgotPassword?token=" + token;

@@ -14,7 +14,7 @@
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
     </div>
-    <a class="item" href="/EventsHere/login">Login</a>
+    <a class="item" href="${pageContext.request.contextPath}/login">Login</a>
 </div>
 
 <div style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" class="ui segment">
@@ -29,7 +29,7 @@
 </c:if>
 
 <h1 class="ui header">Registration</h1>
-<form class="ui form" action="/EventsHere/registration" method="post" style="margin-top: 5%;">
+<form class="ui form" action="${pageContext.request.contextPath}/registration" method="post" style="margin-top: 5%;">
   <div class='field <c:if test="${not empty userExists || not empty emailError}">error</c:if>' style="margin-bottom: 5%;">
     <label>Email</label>
     <input type="text" required name="email" placeholder="Email" <c:if test="${not empty oldEmail}"> value="${oldEmail}" </c:if> >

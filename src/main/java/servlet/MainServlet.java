@@ -2,6 +2,7 @@ package servlet;
 
 import dto.EventDto;
 import dto.ProfileDto;
+import dto.UserDto;
 import entity.Profile;
 import service.AuthenticationService;
 
@@ -48,6 +49,8 @@ public class MainServlet extends HttpServlet {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
+
+        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         req.getRequestDispatcher("/index.jsp").include(req, resp);
 

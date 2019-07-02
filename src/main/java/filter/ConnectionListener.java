@@ -1,6 +1,7 @@
 package filter;
 
 import service.ConnectionService;
+import service.OnlineService;
 
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
@@ -16,8 +17,10 @@ public class ConnectionListener implements HttpSessionListener {
         try {
 
             Connection connection = ConnectionService.getConnection();
+            OnlineService onlineService = OnlineService.getInstance();
 
             se.getSession().setAttribute(ConnectionService.CONNECTION_KEY, connection);
+            onlineService.online(se.getSession().getId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,6 +30,10 @@ public class ConnectionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
+
+        OnlineService onlineService = OnlineService.getInstance();
+
+        onlineService.offline(se.getSession().getId());
 
     }
 }

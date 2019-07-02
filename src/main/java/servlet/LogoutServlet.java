@@ -25,7 +25,7 @@ public class LogoutServlet extends HttpServlet {
             }
         }
 
-        resp.sendRedirect("/EventsHere/login");
+        resp.sendRedirect(req.getContextPath() + "/login");
 
     }
 }

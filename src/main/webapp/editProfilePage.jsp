@@ -45,12 +45,13 @@
                 </div>
            </c:otherwise>
        </c:choose>
-       <a class="item" href="/EventsHere">Home</a>
-       <a class="item" href="/EventsHere/profile">Profile</a>
-       <a class="item" href="/EventsHere/my">My Events Here</a>
-       <a class="item" href="/EventsHere/popular">Popular</a>
-       <a class="item" href="/EventsHere/subscription">Subscription</a>
-       <a class="item" href="/EventsHere/logout">Logout</a>
+       <a class="item" href="${pageContext.request.contextPath}">Home</a>
+       <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
+       <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
+       <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+       <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
+       <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
+       <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>
 
 <div style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" class="ui segment">
@@ -65,7 +66,7 @@
 </c:if>
 
 <h3 class="ui header">Edit Profile</h3>
-<form class="ui form" action="/EventsHere/editProfile" method="post" style="margin-top: 5%;">
+<form class="ui form" action="${pageContext.request.contextPath}/editProfile" method="post" style="margin-top: 5%;">
     <div class="field <c:if test='${not empty firstNameError}'>error</c:if>">
       <label>First Name</label>
       <input type="text" name="firstName" placeholder="First Name" <c:if test="${not empty oldData && not empty oldData.firstName}">value="${oldData.firstName}"</c:if>>

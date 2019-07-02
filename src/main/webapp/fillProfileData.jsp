@@ -35,7 +35,7 @@
     <div class="item">
         <img class="ui mini image" src="http://www.housingeurope.eu/image/167/sectionheaderpng/events.png">
     </div>
-    <a class="item" href="/EventsHere/logout">Logout</a>
+    <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>
 
 <div style="margin-left: 20%; margin-top: 10%; margin-right: 20%;" class="ui segment">
@@ -50,7 +50,7 @@
 </c:if>
 
 <h3 class="ui header">One more minute... Please, enter your personal info to continue work with us</h3>
-<form class="ui form" action="/EventsHere/profile" method="post" style="margin-top: 5%;">
+<form class="ui form" action="${pageContext.request.contextPath}/profile" method="post" style="margin-top: 5%;">
     <div class="field <c:if test='${not empty firstNameError}'>error</c:if>">
       <label>First Name</label>
       <input type="text" name="firstName" placeholder="First Name" <c:if test="${not empty oldData && not empty oldData.firstName}">value="${oldData.firstName}"</c:if>>

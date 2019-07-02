@@ -39,7 +39,7 @@ public class RegistrationServlet extends HttpServlet {
                     userDto.activate(email);
                     req.getSession().setAttribute(AuthenticationService.USER_AUTHENTICATION_KEY, id);
 
-                    resp.sendRedirect("/EventsHere");
+                    resp.sendRedirect(req.getContextPath());
 
                     return;
 
