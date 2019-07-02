@@ -158,7 +158,10 @@ public class Event {
         event.setDescription(req.getParameter("description"));
 
         String dateTime = req.getParameter("dateTime");
-        event.setDateTime(dateTime != null && !dateTime.isEmpty()? LocalDateTime.parse(dateTime) : null);
+
+        try {
+            event.setDateTime(dateTime != null && !dateTime.isEmpty() ? LocalDateTime.parse(dateTime) : null);
+        } catch (Exception e) {}
 
         event.setPhotoUrl(req.getParameter("photoUrl"));
 

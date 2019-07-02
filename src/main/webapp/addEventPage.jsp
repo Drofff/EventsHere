@@ -20,8 +20,8 @@
     $(function() {
 
         <c:if test="${not empty oldData && not empty oldData.description}">
-                   $("#desc_text").val('${oldData.description}');
-                   $("#desc_field").val('${oldData.description}');
+                   $("#desc_text").val("${oldData.description}");
+                   $("#desc_field").val("${oldData.description}");
         </c:if>
 
         $('#multi-select').dropdown();

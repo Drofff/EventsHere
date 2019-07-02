@@ -62,7 +62,7 @@
 
                   <div class="item" style="margin-top:4%;">
                     <div class="ui large small">
-                      <img src="${event.photoUrl}" style="width: 500px; height: 300px;">
+                      <img src="${event.photoUrl}">
                     </div>
                     <div class="content" style="margin-left: 5%;">
                       <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}" style="margin-bottom:4%; margin-top:2%;">${event.name}</a>

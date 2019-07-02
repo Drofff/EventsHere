@@ -118,6 +118,12 @@
 
                  </div>
 
+                 <c:if test="${eventsByTags.size() == 0}">
+
+                     <h4 class="header">Nothing here..</h4>
+
+                 </c:if>
+
               </c:otherwise>
 
             </c:choose>
