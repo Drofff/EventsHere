@@ -1,6 +1,6 @@
 package servlet;
 
-import dto.UserDto;
+import repository.UserRepository;
 import service.AuthenticationService;
 
 import javax.servlet.RequestDispatcher;
@@ -39,9 +39,9 @@ public class ForgotChangePasswordServlet extends HttpServlet {
 
             HttpSession httpSession = req.getSession(false);
 
-            UserDto userDto = UserDto.getInstance(httpSession);
+            UserRepository userRepository = UserRepository.getInstance(httpSession);
 
-            userDto.changePassword((Long) httpSession.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY), password);
+            userRepository.changePassword((Long) httpSession.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY), password);
 
             resp.sendRedirect(req.getContextPath() + "?message=Saved!");
 

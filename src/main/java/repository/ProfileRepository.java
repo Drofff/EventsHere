@@ -1,4 +1,4 @@
-package dto;
+package repository;
 
 import entity.Profile;
 import service.ConnectionService;
@@ -11,20 +11,20 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileDto implements Serializable {
+public class ProfileRepository implements Serializable {
 
-    private static ProfileDto profileDto;
+    private static ProfileRepository profileRepository;
 
     private static Connection connection;
 
-    private ProfileDto() {}
+    private ProfileRepository() {}
 
-    public static ProfileDto getInstance(HttpSession session) {
-        if (profileDto == null) {
-            profileDto = new ProfileDto();
+    public static ProfileRepository getInstance(HttpSession session) {
+        if (profileRepository == null) {
+            profileRepository = new ProfileRepository();
             connection = (Connection) session.getAttribute(ConnectionService.CONNECTION_KEY);
         }
-        return profileDto;
+        return profileRepository;
     }
 
     public void save(Profile profile) {
@@ -101,6 +101,25 @@ public class ProfileDto implements Serializable {
         }
 
         return profiles;
+
+    }
+
+    public void setEmailNotification(Long userId, Boolean notifyMe) {
+
+        String query = "update profile set notify_me = ? where user_id = ?";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setBoolean(1, notifyMe);
+            preparedStatement.setLong(2, userId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -67,7 +67,7 @@
          ${event.name}
       </div>
       <div class="meta">
-        ${event.dateTime}
+        ${event.getFormattedDateTime()}
       </div>
       <div class="description">
         ${event.description}

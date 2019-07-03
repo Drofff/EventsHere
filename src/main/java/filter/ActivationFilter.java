@@ -1,6 +1,6 @@
 package filter;
 
-import dto.UserDto;
+import repository.UserRepository;
 import service.AuthenticationService;
 
 import javax.servlet.*;
@@ -32,9 +32,9 @@ public class ActivationFilter implements Filter {
 
             Long id = (Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-            UserDto userDto = UserDto.getInstance(httpServletRequest.getSession());
+            UserRepository userRepository = UserRepository.getInstance(httpServletRequest.getSession());
 
-            if (!userDto.isActive(id)) {
+            if (!userRepository.isActive(id)) {
 
                 httpServletRequest.getRequestDispatcher("/activatePage.html").include(httpServletRequest, response);
                 return;

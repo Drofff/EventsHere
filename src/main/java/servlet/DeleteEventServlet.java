@@ -1,10 +1,7 @@
 package servlet;
 
-import dto.EventDto;
-import dto.ProfileDto;
-import dto.UserDto;
-import entity.Profile;
-import entity.User;
+import repository.EventRepository;
+import repository.UserRepository;
 import service.AuthenticationService;
 
 import javax.servlet.ServletException;
@@ -20,8 +17,8 @@ public class DeleteEventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        EventDto eventDto = EventDto.getInstance(req.getSession());
-        UserDto userDto = UserDto.getInstance(req.getSession());
+        EventRepository eventRepository = EventRepository.getInstance(req.getSession());
+        UserRepository userRepository = UserRepository.getInstance(req.getSession());
 
         Long userId = (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
@@ -29,11 +26,11 @@ public class DeleteEventServlet extends HttpServlet {
 
             Long id = Long.parseLong(req.getParameter("id"));
 
-            if (!userDto.isAdmin(userId) && !eventDto.findById(id).getOwner().getUserId().equals(userId)) {
+            if (!userRepository.isAdmin(userId) && !eventRepository.findById(id).getOwner().getUserId().equals(userId)) {
                 throw new Exception("Invalid Permission");
             }
 
-            eventDto.deleteById(id);
+            eventRepository.deleteById(id);
 
         } catch (Exception e) {}
 

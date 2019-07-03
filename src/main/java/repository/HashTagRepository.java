@@ -1,4 +1,4 @@
-package dto;
+package repository;
 
 import service.ConnectionService;
 
@@ -9,20 +9,20 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HashTagDto {
+public class HashTagRepository {
 
-    private static HashTagDto hashTagDto;
+    private static HashTagRepository hashTagRepository;
 
     private static Connection connection;
 
-    private HashTagDto() {}
+    private HashTagRepository() {}
 
-    public static HashTagDto getInstance(HttpSession session) {
-        if (hashTagDto == null) {
-            hashTagDto = new HashTagDto();
+    public static HashTagRepository getInstance(HttpSession session) {
+        if (hashTagRepository == null) {
+            hashTagRepository = new HashTagRepository();
             connection = (Connection) session.getAttribute(ConnectionService.CONNECTION_KEY);
         }
-        return hashTagDto;
+        return hashTagRepository;
     }
 
     public List<String> findAll() {

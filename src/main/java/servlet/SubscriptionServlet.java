@@ -1,6 +1,6 @@
 package servlet;
 
-import dto.ProfileDto;
+import repository.ProfileRepository;
 import entity.Profile;
 import service.AuthenticationService;
 
@@ -23,14 +23,14 @@ public class SubscriptionServlet extends HttpServlet {
             Long id = Long.parseLong(req.getParameter("id"));
 
             HttpSession session = req.getSession();
-            ProfileDto profileDto = ProfileDto.getInstance(session);
+            ProfileRepository profileRepository = ProfileRepository.getInstance(session);
 
-            Profile currentProfile = profileDto.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+            Profile currentProfile = profileRepository.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
-            if (profileDto.getSubscribers(id).stream().anyMatch(x -> x.getId().equals(currentProfile.getId()))) {
-                profileDto.unsubscribe(currentProfile.getId(), id);
+            if (profileRepository.getSubscribers(id).stream().anyMatch(x -> x.getId().equals(currentProfile.getId()))) {
+                profileRepository.unsubscribe(currentProfile.getId(), id);
             } else {
-                profileDto.subscribe(currentProfile.getId(), id);
+                profileRepository.subscribe(currentProfile.getId(), id);
             }
 
         } catch (Exception e) {}

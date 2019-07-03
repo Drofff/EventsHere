@@ -1,7 +1,7 @@
 package servlet;
 
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
 import service.MailService;
@@ -27,17 +27,17 @@ public class BlockServlet extends HttpServlet {
 
             String reason = req.getParameter("reason");
 
-            ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+            ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
 
-            Profile profile = profileDto.findByOwnerId(id);
+            Profile profile = profileRepository.findByOwnerId(id);
 
             if (profile != null && !id.equals(userId)) {
 
-                UserDto userDto = UserDto.getInstance(req.getSession());
+                UserRepository userRepository = UserRepository.getInstance(req.getSession());
 
-                MailService.getInstance().sendBlockedWarning(UserDto.getInstance(req.getSession()).findById(id), reason);
+                MailService.getInstance().sendBlockedWarning(UserRepository.getInstance(req.getSession()).findById(id), reason);
 
-                userDto.delete(id);
+                userRepository.delete(id);
 
                 resp.sendRedirect(req.getContextPath() + "/admin?msg=User blocked successfully");
                 return;

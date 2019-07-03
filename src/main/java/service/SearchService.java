@@ -1,14 +1,14 @@
 package service;
 
-import dto.EventDto;
+import repository.EventRepository;
 import entity.Event;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchService implements Serializable {
 
@@ -28,28 +28,40 @@ public class SearchService implements Serializable {
         return searchService;
     }
 
+    public List<Event> filterFrom(String from, List<Event> eventList) throws Exception {
+        LocalDate fromDateTime = LocalDate.parse(from);
+        return  eventList.stream().filter(x -> ( x.getDateTime().toLocalDate().isAfter(fromDateTime) || x.getDateTime().toLocalDate().isEqual(fromDateTime)))
+                .collect(Collectors.toList());
+    }
+
+    public List<Event> filterTo(String to, List<Event> eventList) throws Exception {
+        LocalDate toDateTime = LocalDate.parse(to);
+        return eventList.stream().filter(x -> x.getDateTime().toLocalDate().isBefore(toDateTime) || x.getDateTime().toLocalDate().isEqual(toDateTime))
+                .collect(Collectors.toList());
+    }
+
     public List<Event> search(HttpServletRequest req) {
 
         String name = req.getParameter("name");
         String hashTags = req.getParameter("hash");
 
-        EventDto eventDto = EventDto.getInstance(session);
+        EventRepository eventRepository = EventRepository.getInstance(session);
 
-        List<Event> events = eventDto.findAll(0);
+        List<Event> events = eventRepository.findAll(0);
 
         if (name != null && !name.isEmpty() && hashTags != null && !hashTags.isEmpty()) {
 
-            events = eventDto.findByNameAndTag(name, parseTags(req));
+            events = eventRepository.findByNameAndTag(name, parseTags(req));
 
         } else if (name != null && !name.isEmpty()) {
 
-            events = eventDto.findByName(req.getParameter("name"));
+            events = eventRepository.findByName(req.getParameter("name"));
 
             req.setAttribute("oldName", name);
 
         } else if (hashTags != null && !hashTags.isEmpty()) {
 
-            events = eventDto.findByHashtag(parseTags(req));
+            events = eventRepository.findByHashtag(parseTags(req));
 
         }
 
@@ -59,21 +71,14 @@ public class SearchService implements Serializable {
 
     public static List<String> parseTags(HttpServletRequest request) {
 
-        List<String> tags = new LinkedList<>();
+        String [] tags = request.getParameterValues("hash");
 
-        Enumeration<String> params = request.getParameterNames();
-
-        while (params.hasMoreElements()) {
-
-            String currentParameterName = params.nextElement();
-
-            if (currentParameterName.matches("(hash)(\\D)*")) {
-                tags.add(request.getParameter(currentParameterName));
-            }
-
+        if (tags == null) {
+            return Collections.emptyList();
         }
 
-        return tags;
+        return Arrays.asList(tags);
+
     }
 
 }

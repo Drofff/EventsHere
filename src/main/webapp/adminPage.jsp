@@ -139,7 +139,7 @@ $(function() {
       <tr>
         <td>${event.name}</td>
         <td>${event.description}</td>
-        <td>${event.dateTime}</td>
+        <td>${event.getFormattedDateTime()}</td>
         <td><a href="${pageContext.request.contextPath}/save?id=${event.id}">Edit</a></td>
         <td><a href="${pageContext.request.contextPath}/delete?id=${event.id}">Delete</a></td>
       </tr>

@@ -1,8 +1,7 @@
 package filter;
 
-import dto.ProfileDto;
-import dto.UserDto;
-import entity.User;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import service.AuthenticationService;
 
 import javax.servlet.*;
@@ -28,14 +27,14 @@ public class ProfileFilter implements Filter {
 
         HttpSession session = httpServletRequest.getSession();
 
-        UserDto userDto = UserDto.getInstance(session);
-        ProfileDto profileDto = ProfileDto.getInstance(session);
+        UserRepository userRepository = UserRepository.getInstance(session);
+        ProfileRepository profileRepository = ProfileRepository.getInstance(session);
 
         if (session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY) != null && !uri.matches(".*(/logout).*") && !uri.matches(".*(/profile).*")) {
 
             Long id = (Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-                if (userDto.isActive(id) && profileDto.findByOwnerId(id) == null) {
+                if (userRepository.isActive(id) && profileRepository.findByOwnerId(id) == null) {
 
                     request.getRequestDispatcher("/fillProfileData.jsp").include(httpServletRequest, response);
                     return;

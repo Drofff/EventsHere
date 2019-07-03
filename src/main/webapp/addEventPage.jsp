@@ -26,6 +26,24 @@
 
         $('#multi-select').dropdown();
 
+
+        <c:if test="${not empty oldData && not empty oldData.getHashTags()}">
+
+            var tags = [];
+
+            <c:forEach var="tag" items="${oldData.getHashTags()}">
+                tags.push('${tag}');
+            </c:forEach>
+
+            if (tags.length > 0) {
+
+                $('#multi-select').dropdown('set selected', tags);
+
+             }
+
+
+        </c:if>
+
         $("#desc_text").keyup(function() {
 
             $("#desc_field").val( $("#desc_text").val() );

@@ -1,4 +1,4 @@
-package dto;
+package repository;
 
 import entity.Role;
 import entity.User;
@@ -9,28 +9,27 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserDto implements Serializable {
+public class UserRepository implements Serializable {
 
-    private static UserDto userDto;
+    private static UserRepository userRepository;
     private static Connection connection;
 
-    private UserDto(HttpSession session) {
+    private UserRepository(HttpSession session) {
         connection = (Connection)session.getAttribute(ConnectionService.CONNECTION_KEY);
     }
 
-    public static UserDto getInstance(HttpSession session) {
+    public static UserRepository getInstance(HttpSession session) {
 
-        if (userDto == null) {
+        if (userRepository == null) {
 
-            userDto = new UserDto(session);
+            userRepository = new UserRepository(session);
 
         }
 
-        return userDto;
+        return userRepository;
     }
 
     public Long findByUsername(String username) {

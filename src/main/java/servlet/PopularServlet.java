@@ -1,8 +1,8 @@
 package servlet;
 
-import dto.EventDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.EventRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
 
@@ -21,25 +21,25 @@ public class PopularServlet extends HttpServlet {
 
             String type = req.getQueryString();
 
-            ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
-            EventDto eventDto = EventDto.getInstance(req.getSession());
+            ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
+            EventRepository eventRepository = EventRepository.getInstance(req.getSession());
 
-            Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+            Profile profile = profileRepository.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
 
-            req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+            req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
             if (type == null || type.isEmpty()) {
 
                 req.setAttribute("byLikes", true);
-                req.setAttribute("eventsByLikes", eventDto.findPopularByLikes());
+                req.setAttribute("eventsByLikes", eventRepository.findPopularByLikes());
 
             } else if (type.equals("tags")) {
 
                 req.setAttribute("byTags", true);
-                req.setAttribute("eventsByTags", eventDto.findPopularByTags());
+                req.setAttribute("eventsByTags", eventRepository.findPopularByTags());
 
             } else {
                 resp.sendRedirect(req.getContextPath());

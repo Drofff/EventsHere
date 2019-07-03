@@ -1,7 +1,7 @@
 package servlet;
 
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
 import service.ValidationService;
@@ -25,7 +25,7 @@ public class EditProfileServlet extends HttpServlet {
 
         Long id = (Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-        Profile profile = ProfileDto.getInstance(req.getSession()).findByOwnerId(id);
+        Profile profile = ProfileRepository.getInstance(req.getSession()).findByOwnerId(id);
 
         req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
         req.setAttribute("photoUrl", profile.getPhotoUrl());
@@ -41,16 +41,16 @@ public class EditProfileServlet extends HttpServlet {
 
         Profile profile = Profile.create(req);
 
-        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+        ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
 
         HttpSession session = req.getSession();
 
-        Profile currentProfile = profileDto.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        Profile currentProfile = profileRepository.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         req.setAttribute("name", currentProfile.getFirstName() + " " + currentProfile.getLastName());
         req.setAttribute("photoUrl", currentProfile.getPhotoUrl());
 
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         String status = req.getParameter("status");
 
@@ -72,7 +72,7 @@ public class EditProfileServlet extends HttpServlet {
         profile.setUserId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
         profile.setId(currentProfile.getId());
 
-        profileDto.save(profile);
+        profileRepository.save(profile);
 
         resp.sendRedirect(req.getContextPath());
 

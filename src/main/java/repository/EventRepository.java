@@ -1,8 +1,9 @@
-package dto;
+package repository;
 
 import entity.Event;
 import entity.Profile;
 import service.ConnectionService;
+import service.MailService;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
@@ -16,9 +17,9 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EventDto implements Serializable {
+public class EventRepository implements Serializable {
 
-    private static EventDto eventDto;
+    private static EventRepository eventRepository;
 
     private static Connection connection;
 
@@ -26,15 +27,15 @@ public class EventDto implements Serializable {
 
     private static final Integer elementsPerPage = 10;
 
-    private EventDto() {}
+    private EventRepository() {}
 
-    public static EventDto getInstance(HttpSession httpSession) {
-        if (eventDto == null) {
-            eventDto = new EventDto();
+    public static EventRepository getInstance(HttpSession httpSession) {
+        if (eventRepository == null) {
+            eventRepository = new EventRepository();
             connection = (Connection) httpSession.getAttribute(ConnectionService.CONNECTION_KEY);
             session = httpSession;
         }
-        return eventDto;
+        return eventRepository;
     }
 
     public List<Event> findByNameAndTag(String name, List<String> tags) {
@@ -238,6 +239,8 @@ public class EventDto implements Serializable {
 
     public void save(Event event) {
 
+        MailService mailService = MailService.getInstance();
+
         String checkQuery = "select * from events where id = ?";
 
         String addQuery = "insert into events (name, description, date_time, owner_id, photo_url) values (?, ?, ?, ?, ?) returning id";
@@ -282,6 +285,8 @@ public class EventDto implements Serializable {
                     eventId = resultSet.getLong("id");
 
                 }
+
+                mailService.sendNotification(event.getOwner().getId(), eventId, session);
 
             } else {
 
@@ -505,7 +510,7 @@ public class EventDto implements Serializable {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                events.add(eventDto.findById(resultSet.getLong("id")));
+                events.add(eventRepository.findById(resultSet.getLong("id")));
             }
 
         } catch (Exception e) {

@@ -1,12 +1,11 @@
 package servlet;
 
-import dto.EventDto;
-import dto.HashTagDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.EventRepository;
+import repository.HashTagRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Event;
 import entity.Profile;
-import entity.User;
 import service.AuthenticationService;
 import service.ValidationService;
 
@@ -25,20 +24,22 @@ public class AddEventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        HashTagDto hashTagDto = HashTagDto.getInstance(req.getSession());
-        EventDto eventDto = EventDto.getInstance(req.getSession());
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(req.getSession());
+        EventRepository eventRepository = EventRepository.getInstance(req.getSession());
 
-        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
-        Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
+        Profile profile = profileRepository.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        Boolean isAdmin = UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
-        req.setAttribute("tags", hashTagDto.findAll());
+        req.setAttribute( "isAdmin", isAdmin);
+
+        req.setAttribute("tags", hashTagRepository.findAll());
 
         if (req.getParameter("id") != null) {
 
@@ -46,11 +47,14 @@ public class AddEventServlet extends HttpServlet {
 
                 Long eventId = Long.parseLong(req.getParameter("id"));
 
-                Event currentEvent = eventDto.findById(eventId);
+                Event currentEvent = eventRepository.findById(eventId);
+
+                String oldDescription = currentEvent.getDescription();
+                currentEvent.setDescription(oldDescription.replace("\"", "\'\'"));
 
                 req.setAttribute("oldData", currentEvent);
 
-                if (!currentEvent.getOwner().getUserId().equals(profile.getUserId())) {
+                if (!currentEvent.getOwner().getUserId().equals(profile.getUserId()) && !isAdmin) {
                     resp.sendRedirect(req.getContextPath());
                     return;
                 }
@@ -70,20 +74,22 @@ public class AddEventServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         ValidationService validationService = ValidationService.getInstance(session);
-        HashTagDto hashTagDto = HashTagDto.getInstance(session);
-        EventDto eventDto = EventDto.getInstance(session);
-        ProfileDto profileDto = ProfileDto.getInstance(session);
-        UserDto userDto = UserDto.getInstance(session);
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(session);
+        EventRepository eventRepository = EventRepository.getInstance(session);
+        ProfileRepository profileRepository = ProfileRepository.getInstance(session);
+        UserRepository userRepository = UserRepository.getInstance(session);
 
-        Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        Long userId = (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
+
+        Profile profile = profileRepository.findByOwnerId(userId);
+        req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin(userId));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.setAttribute("tags", hashTagDto.findAll());
+        req.setAttribute("tags", hashTagRepository.findAll());
 
         try {
 
@@ -95,15 +101,18 @@ public class AddEventServlet extends HttpServlet {
 
                 event.setOwner(profile);
 
-                if (!userDto.isAdmin(profile.getUserId()) && !event.getOwner().getUserId().equals(profile.getUserId())) {
+                if (!userRepository.isAdmin(profile.getUserId()) && !event.getOwner().getUserId().equals(profile.getUserId())) {
                     resp.sendRedirect(req.getContextPath());
                 }
 
-                eventDto.save(event);
+                eventRepository.save(event);
                 resp.sendRedirect(req.getContextPath() + "/my");
                 return;
 
             } else {
+
+                String oldDescription = event.getDescription();
+                event.setDescription(oldDescription.replace("\"", "\'\'"));
 
                 req.setAttribute("oldData", event);
 

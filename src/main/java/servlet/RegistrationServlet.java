@@ -1,6 +1,6 @@
 package servlet;
 
-import dto.UserDto;
+import repository.UserRepository;
 import entity.User;
 import service.ActivationService;
 import service.AuthenticationService;
@@ -30,13 +30,13 @@ public class RegistrationServlet extends HttpServlet {
 
             if (!email.equals("")) {
 
-                UserDto userDto = UserDto.getInstance(req.getSession());
+                UserRepository userRepository = UserRepository.getInstance(req.getSession());
 
-                Long id = userDto.findByUsername(email);
+                Long id = userRepository.findByUsername(email);
 
                 if (id != null) {
 
-                    userDto.activate(email);
+                    userRepository.activate(email);
                     req.getSession().setAttribute(AuthenticationService.USER_AUTHENTICATION_KEY, id);
 
                     resp.sendRedirect(req.getContextPath());
@@ -62,7 +62,7 @@ public class RegistrationServlet extends HttpServlet {
 
         ValidationService validationService = ValidationService.getInstance(req.getSession());
         AuthenticationService authenticationService = AuthenticationService.getInstance(req.getSession());
-        UserDto userDto = UserDto.getInstance(req.getSession());
+        UserRepository userRepository = UserRepository.getInstance(req.getSession());
 
         if (validationService.validateEmail(email)) {
 
@@ -76,7 +76,7 @@ public class RegistrationServlet extends HttpServlet {
                         user.setUsername(email);
                         user.setPassword(EncryptingService.getInstance().encrypt(password));
 
-                        userDto.save(user);
+                        userRepository.save(user);
 
                         ActivationService activationService = ActivationService.getInstance();
                         activationService.sendActivationMail(user.getUsername());

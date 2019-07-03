@@ -1,8 +1,8 @@
 package entity;
 
-import dto.EventDto;
-import dto.HashTagDto;
-import dto.ProfileDto;
+import repository.EventRepository;
+import repository.HashTagRepository;
+import repository.ProfileRepository;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +49,11 @@ public class Event {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    public String getFormattedDateTime() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss");
+        return this.dateTime.format(dateTimeFormatter);
     }
 
     public void setDateTime(LocalDateTime dateTime) {
@@ -123,9 +128,9 @@ public class Event {
 
     public static Event parse(ResultSet resultSet, HttpSession session) throws SQLException {
 
-        EventDto eventDto = EventDto.getInstance(session);
-        HashTagDto hashTagDto = HashTagDto.getInstance(session);
-        ProfileDto profileDto = ProfileDto.getInstance(session);
+        EventRepository eventRepository = EventRepository.getInstance(session);
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(session);
+        ProfileRepository profileRepository = ProfileRepository.getInstance(session);
 
         Long id = resultSet.getLong("id");
 
@@ -134,12 +139,12 @@ public class Event {
         event.setId(id);
         event.setDescription(resultSet.getString("description"));
         event.setName(resultSet.getString("name"));
-        event.setOwner(profileDto.findByOwnerId(resultSet.getLong("owner_id")));
+        event.setOwner(profileRepository.findByOwnerId(resultSet.getLong("owner_id")));
         event.setPhotoUrl(resultSet.getString("photo_url"));
-        event.setHashTags(hashTagDto.findByEventId(id));
-        event.setLikes(eventDto.getLikes(id));
+        event.setHashTags(hashTagRepository.findByEventId(id));
+        event.setLikes(eventRepository.getLikes(id));
         event.setDateTime(resultSet.getString("date_time"));
-        event.setMembers(eventDto.getMembers(id));
+        event.setMembers(eventRepository.getMembers(id));
 
         return event;
     }

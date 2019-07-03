@@ -1,6 +1,6 @@
 package servlet;
 
-import dto.HashTagDto;
+import repository.HashTagRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,9 +16,9 @@ public class HashTagServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        HashTagDto hashTagDto = HashTagDto.getInstance(req.getSession());
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(req.getSession());
 
-        List<String> tags = hashTagDto.findAll();
+        List<String> tags = hashTagRepository.findAll();
 
         for (String tag : tags) {
             resp.getWriter().println("<option value='" + tag + "'>" + tag + "</option>\n");
@@ -31,11 +31,11 @@ public class HashTagServlet extends HttpServlet {
 
         String name = req.getParameter("name");
 
-        HashTagDto hashTagDto = HashTagDto.getInstance(req.getSession());
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(req.getSession());
 
-        if (name != null && !name.isEmpty() && !hashTagDto.findAll().contains(name)) {
+        if (name != null && !name.isEmpty() && !hashTagRepository.findAll().contains(name)) {
 
-            hashTagDto.add(name);
+            hashTagRepository.add(name);
 
             resp.getWriter().print(true);
             return;

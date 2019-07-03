@@ -1,8 +1,8 @@
 package servlet;
 
-import dto.EventDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.EventRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
 
@@ -27,11 +27,11 @@ public class MainServlet extends HttpServlet {
             page = Integer.parseInt(pageNumber);
         }
 
-        EventDto eventDto = EventDto.getInstance(req.getSession());
+        EventRepository eventRepository = EventRepository.getInstance(req.getSession());
 
-        req.setAttribute("events", eventDto.findAll(page));
+        req.setAttribute("events", eventRepository.findAll(page));
 
-        Long pagesCount = eventDto.getPagesCount();
+        Long pagesCount = eventRepository.getPagesCount();
 
         if (pagesCount > page + 1) {
             req.setAttribute("nextPage", page + 1);
@@ -41,16 +41,16 @@ public class MainServlet extends HttpServlet {
             req.setAttribute("prevPage", page - 1);
         }
 
-        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+        ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
 
-        Profile profile = profileDto.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+        Profile profile = profileRepository.findByOwnerId((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         req.getRequestDispatcher("/index.jsp").include(req, resp);
 

@@ -1,13 +1,10 @@
 package service;
 
-import dto.EventDto;
-import dto.HashTagDto;
+import repository.HashTagRepository;
 import entity.Event;
-import entity.Profile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.io.Serializable;
@@ -41,14 +38,14 @@ public class ValidationService implements Serializable {
         Map<String, String> errors = new HashMap<>();
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        HashTagDto hashTagDto = HashTagDto.getInstance(session);
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(session);
 
         Set<ConstraintViolation<T>> validationResult = validator.validate(t);
 
         validationResult.stream().forEach(x -> errors.put(x.getPropertyPath().toString() + "Error", x.getMessage()));
 
         if (t instanceof Event) {
-            String tagsValidation = validateTags(hashTagDto.findAll());
+            String tagsValidation = validateTags(hashTagRepository.findAll());
 
             if (tagsValidation != null) {
                 errors.put("tagError", tagsValidation);
@@ -61,9 +58,9 @@ public class ValidationService implements Serializable {
 
     public String validateTags(List<String> tagList) {
 
-        HashTagDto hashTagDto = HashTagDto.getInstance(session);
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(session);
 
-        List<String> tags = hashTagDto.findAll();
+        List<String> tags = hashTagRepository.findAll();
 
         for (String tag : tagList) {
 

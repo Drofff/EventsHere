@@ -1,12 +1,8 @@
 package entity;
 
-import dto.ProfileDto;
 import org.hibernate.validator.constraints.NotBlank;
-import service.ConnectionService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -25,6 +21,8 @@ public class Profile {
 
     private String status;
 
+    private Boolean notifyMe;
+
     @NotBlank(message = "Input your phone number")
     private String phoneNumber;
 
@@ -34,6 +32,14 @@ public class Profile {
     private List<Profile> subscribers;
 
     private List<Profile> subscriptions;
+
+    public Boolean getNotifyMe() {
+        return notifyMe;
+    }
+
+    public void setNotifyMe(Boolean notifyMe) {
+        this.notifyMe = notifyMe;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -118,6 +124,7 @@ public class Profile {
         profile.setLastName(resultSet.getString("last_name"));
         profile.setFirstName(resultSet.getString("first_name"));
         profile.setStatus(resultSet.getString("status"));
+        profile.setNotifyMe(resultSet.getBoolean("notify_me"));
 
         return profile;
     }
@@ -131,6 +138,7 @@ public class Profile {
         profile.setStatus("Hey! I am new here!");
         profile.setPhoneNumber(request.getParameter("phoneNumber"));
         profile.setPhotoUrl(request.getParameter("photoUrl"));
+        profile.setNotifyMe(false);
 
         return profile;
 

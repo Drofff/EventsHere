@@ -1,8 +1,8 @@
 package servlet;
 
-import dto.EventDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.EventRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
 import service.ValidationService;
@@ -23,17 +23,17 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         HttpSession session = req.getSession();
-        ProfileDto profileDto = ProfileDto.getInstance(session);
+        ProfileRepository profileRepository = ProfileRepository.getInstance(session);
 
         Long userId = (Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
-        Profile currentProfile = profileDto.findByOwnerId(userId);
+        Profile currentProfile = profileRepository.findByOwnerId(userId);
 
         if (currentProfile == null) {
             resp.sendRedirect(req.getContextPath());
             return;
         }
 
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         req.setAttribute("name", currentProfile.getFirstName() + " " + currentProfile.getLastName());
         req.setAttribute("photoUrl", currentProfile.getPhotoUrl());
@@ -51,35 +51,34 @@ public class ProfileServlet extends HttpServlet {
 
             try {
 
-                profile = profileDto.findById(Long.parseLong(profileId));
+                profile = profileRepository.findById(Long.parseLong(profileId));
 
                 if (profile.getId().equals(currentProfile.getId())) {
 
                     req.setAttribute("me", true);
 
-                } else if (profileDto.getSubscribers(profile.getId()).stream().anyMatch(x -> x.getId().equals(currentProfile.getId()))) {
+                } else if (profileRepository.getSubscribers(profile.getId()).stream().anyMatch(x -> x.getId().equals(currentProfile.getId()))) {
 
                     req.setAttribute("subscriber", true);
 
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
                 resp.sendRedirect(req.getContextPath());
                 return;
             }
 
         }
 
-        profile.setSubscribers(profileDto.getSubscribers(profile.getId()));
-        profile.setSubscriptions(profileDto.getSubscriptions(profile.getId()));
+        profile.setSubscribers(profileRepository.getSubscribers(profile.getId()));
+        profile.setSubscriptions(profileRepository.getSubscriptions(profile.getId()));
 
         req.setAttribute("profile", profile);
 
         if (profile != null) {
-            EventDto eventDto = EventDto.getInstance(session);
-            req.setAttribute("history", eventDto.getHistoryOf(profile.getUserId()));
-            req.setAttribute("events", eventDto.findByOwner(profile.getUserId()));
+            EventRepository eventRepository = EventRepository.getInstance(session);
+            req.setAttribute("history", eventRepository.getHistoryOf(profile.getUserId()));
+            req.setAttribute("events", eventRepository.findByOwner(profile.getUserId()));
         }
 
         req.getRequestDispatcher("/profilePage.jsp").include(req, resp);
@@ -107,9 +106,9 @@ public class ProfileServlet extends HttpServlet {
 
         profile.setUserId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
-        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+        ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
 
-        profileDto.save(profile);
+        profileRepository.save(profile);
 
         resp.sendRedirect(req.getContextPath());
 

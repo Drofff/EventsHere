@@ -1,8 +1,8 @@
 package servlet;
 
-import dto.EventDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.EventRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
 
@@ -19,24 +19,24 @@ public class MyEventsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        EventDto eventDto = EventDto.getInstance(req.getSession());
+        EventRepository eventRepository = EventRepository.getInstance(req.getSession());
 
         Long userId = (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-        req.setAttribute("events", eventDto.findByOwner(userId));
+        req.setAttribute("events", eventRepository.findByOwner(userId));
 
-        req.setAttribute("history", eventDto.getHistoryOf(userId));
+        req.setAttribute("history", eventRepository.getHistoryOf(userId));
 
-        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+        ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
 
-        Profile profile = profileDto.findByOwnerId(userId);
+        Profile profile = profileRepository.findByOwnerId(userId);
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         req.getRequestDispatcher("/myEventsPage.jsp").include(req, resp);
 

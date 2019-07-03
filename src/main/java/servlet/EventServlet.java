@@ -1,8 +1,8 @@
 package servlet;
 
-import dto.EventDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.EventRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import entity.Event;
 import entity.Profile;
 import service.AuthenticationService;
@@ -20,20 +20,20 @@ public class EventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        EventDto eventDto = EventDto.getInstance(req.getSession());
-        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+        EventRepository eventRepository = EventRepository.getInstance(req.getSession());
+        ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
 
         try {
 
             Long id = Long.parseLong(req.getParameter("id"));
 
-            Event currentEvent = eventDto.findById(id);
+            Event currentEvent = eventRepository.findById(id);
 
             req.setAttribute("event", currentEvent);
 
-            Profile profile = profileDto.findByOwnerId( (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+            Profile profile = profileRepository.findByOwnerId( (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
-            req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+            req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
             if (profile != null) {
 

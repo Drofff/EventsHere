@@ -1,6 +1,6 @@
 package servlet;
 
-import dto.UserDto;
+import repository.UserRepository;
 import service.AuthenticationService;
 import service.MailService;
 import service.TokenService;
@@ -24,13 +24,13 @@ public class ForgotServlet extends HttpServlet {
         if (token != null) {
 
             TokenService tokenService = TokenService.getInstance();
-            UserDto userDto = UserDto.getInstance(req.getSession());
+            UserRepository userRepository = UserRepository.getInstance(req.getSession());
 
             String email = tokenService.use(token);
 
             if (email != null && !email.isEmpty()) {
 
-                Long userId = userDto.findByUsername(email);
+                Long userId = userRepository.findByUsername(email);
 
                 if (userId != null) {
 

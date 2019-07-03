@@ -35,8 +35,6 @@ public class InitDatabase {
     @Test
     public void userInfo() {
 
-        System.out.println("Creating user info tables");
-
         String userInfoTableQuery = "create table if not exists user_info ( id serial primary key, username varchar not null, password varchar not null, active boolean )";
 
         String userRoleTableQuery = "create table if not exists user_role ( user_id bigint not null, role varchar not null, PRIMARY KEY (user_id, role))";
@@ -46,16 +44,8 @@ public class InitDatabase {
         try {
 
             connection.prepareStatement(userInfoTableQuery).executeUpdate();
-
-            System.out.println("Successfully created table 'user_info'");
-
             connection.prepareStatement(userRoleTableQuery).executeUpdate();
-
-            System.out.println("Successfully created table 'user_role'");
-
             connection.prepareStatement(sessionTokenTableQuery).executeUpdate();
-
-            System.out.println("Successfully created table 'session_token'");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,8 +68,6 @@ public class InitDatabase {
 
         try {
 
-            System.out.println("Creating admin with credentials:\nusername: " + username + "\npassword: " + password);
-
             PreparedStatement preparedStatement = connection.prepareStatement(insertFirstAdminQuery);
 
             preparedStatement.setString(1, username);
@@ -96,16 +84,12 @@ public class InitDatabase {
 
             if (id != null) {
 
-                System.out.println("Successfully added to 'user_info'");
-
                 PreparedStatement roleStatement = connection.prepareStatement(insertRole);
 
                 roleStatement.setLong(1, id);
                 roleStatement.setString(2, Role.ADMIN.name());
 
                 roleStatement.executeUpdate();
-
-                System.out.println("Success while adding info to 'user_role'");
 
             }
 
@@ -131,31 +115,13 @@ public class InitDatabase {
 
         try {
 
-            System.out.println("Starting events creation\n");
-
-            System.out.println("1. Creating 'events' table");
-
             connection.prepareStatement(eventsQuery).executeUpdate();
-
-            System.out.println("Success");
-
-            System.out.println("2. Creating 'event_likes' table");
 
             connection.prepareStatement(eventLikesQuery).executeUpdate();
 
-            System.out.println("Success");
-
-            System.out.println("3. Creating 'event_members' table");
-
             connection.prepareStatement(eventMembersQuery).executeUpdate();
 
-            System.out.println("Success");
-
-            System.out.println("4. Creating 'event_tags' table");
-
             connection.prepareStatement(eventTagsQuery).executeUpdate();
-
-            System.out.println("Successfully finished creating events");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,11 +139,7 @@ public class InitDatabase {
 
         try {
 
-            System.out.println("Creating table 'hashtag'");
-
             connection.prepareStatement(query).executeUpdate();
-
-            System.out.println("Success");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,23 +152,16 @@ public class InitDatabase {
     @Test
     public void profile() {
 
-        String query = "create table if not exists profile ( id serial primary key, first_name varchar not null, last_name varchar not null, user_id bigint not null, photo_url varchar, phone_number varchar, status varchar )";
+        String query = "create table if not exists profile ( id serial primary key, first_name varchar not null, last_name varchar not null, user_id bigint not null, photo_url varchar, phone_number varchar, status varchar, notify_me boolean )";
 
         String subscrQuery = "create table if not exists subscription_info (subscriber_id bigint not null, channel_id bigint not null, PRIMARY KEY(subscriber_id, channel_id))";
 
         try {
 
-            System.out.println("Creating 'profile' table");
-
             connection.prepareStatement(query).executeUpdate();
-
-            System.out.println("Successfully created table 'profile'");
-
-            System.out.println("Creating 'subscription_info' table");
 
             connection.prepareStatement(subscrQuery).executeUpdate();
 
-            System.out.println("Successfully create table 'subscription_info'");
 
         } catch (Exception e) {
             e.printStackTrace();

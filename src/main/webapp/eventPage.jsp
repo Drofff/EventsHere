@@ -91,7 +91,7 @@ function unvisit() {
     </div>
 
     <div class="ui label" style="margin-bottom: 5%; margin-top: 5%;">
-                <i class="calendar icon"></i> ${event.dateTime}
+                <i class="calendar icon"></i> ${event.getFormattedDateTime()}
               </div>
 
     <h4 class="header">Members:</h4>

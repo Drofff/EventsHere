@@ -62,7 +62,7 @@
 
                   <div class="item" style="margin-top:4%;">
                     <div class="ui large small">
-                      <img src="${event.photoUrl}">
+                      <img src="${event.photoUrl}" style="max-width: 400px;">
                     </div>
                     <div class="content" style="margin-left: 5%;">
                       <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}" style="margin-bottom:4%; margin-top:2%;">${event.name}</a>
@@ -73,7 +73,7 @@
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
-                           <i class="calendar icon"></i> ${event.dateTime}
+                           <i class="calendar icon"></i> ${event.getFormattedDateTime()}
                       </div>
                       <div class="description" style="margin-bottom: 5%;">
                         ${event.description}

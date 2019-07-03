@@ -1,9 +1,9 @@
 package servlet;
 
-import dto.EventDto;
-import dto.HashTagDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.HashTagRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
+import entity.Event;
 import entity.Profile;
 import service.AuthenticationService;
 import service.SearchService;
@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 
 @WebServlet(name = "SearchServlet", urlPatterns = "/search")
 public class SearchServlet extends HttpServlet {
@@ -25,21 +29,49 @@ public class SearchServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         SearchService searchService = SearchService.getInstance(session);
-        HashTagDto hashTagDto = HashTagDto.getInstance(session);
-        ProfileDto profileDto = ProfileDto.getInstance(session);
+        HashTagRepository hashTagRepository = HashTagRepository.getInstance(session);
+        ProfileRepository profileRepository = ProfileRepository.getInstance(session);
 
-        req.setAttribute("events", searchService.search(req));
+        List<Event> eventList = searchService.search(req);
 
-        req.setAttribute("tags", hashTagDto.findAll());
+        try {
 
-        Profile profile = profileDto.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
+            String from = req.getParameter("from");
+            String to = req.getParameter("to");
+
+            if (from != null && !from.isEmpty() && to != null && !to.isEmpty()) {
+
+                eventList = searchService.filterFrom(from, eventList);
+                eventList = searchService.filterTo(to, eventList);
+
+            } else if (from != null && !from.isEmpty()) {
+
+                eventList = searchService.filterFrom(from, eventList);
+
+            } else if (to != null && !to.isEmpty()) {
+
+                eventList = searchService.filterTo(to, eventList);
+
+            }
+
+        } catch (Exception e) {}
+
+        req.setAttribute("events", eventList);
+        req.setAttribute("tags", hashTagRepository.findAll());
+
+        req.setAttribute("oldTags", SearchService.parseTags(req));
+
+        req.setAttribute("today", LocalDate.now());
+        req.setAttribute("nextWeekBound", LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
+
+        Profile profile = profileRepository.findByOwnerId((Long) session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         if (profile != null) {
             req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
             req.setAttribute("photoUrl", profile.getPhotoUrl());
         }
 
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         req.getRequestDispatcher("/searchPage.jsp").include(req, resp);
 

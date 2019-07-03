@@ -1,6 +1,6 @@
 package filter;
 
-import dto.UserDto;
+import repository.UserRepository;
 import service.AuthenticationService;
 
 import javax.servlet.*;
@@ -23,9 +23,9 @@ public class AdminFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         Long id = (Long) httpServletRequest.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
-        UserDto userDto = UserDto.getInstance(httpServletRequest.getSession());
+        UserRepository userRepository = UserRepository.getInstance(httpServletRequest.getSession());
 
-        if (id != null && !userDto.isAdmin(id)) {
+        if (id != null && !userRepository.isAdmin(id)) {
             ((HttpServletResponse) response).sendRedirect(httpServletRequest.getContextPath());
             return;
         }

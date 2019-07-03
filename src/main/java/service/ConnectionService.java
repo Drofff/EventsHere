@@ -3,14 +3,9 @@ package service;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Map;
 
 public class ConnectionService implements Serializable {
-
-    private static final String CONNECTION_URL = "jdbc:postgresql://localhost:5432/events";
-
-    private static final String USERNAME = "postgres";
-
-    private static final String PASSWORD = "root";
 
     public static final String CONNECTION_KEY = "db_connection";
 
@@ -33,7 +28,9 @@ public class ConnectionService implements Serializable {
 
         Class.forName("org.postgresql.Driver");
 
-        return DriverManager.getConnection(CONNECTION_URL, USERNAME, PASSWORD);
+        Map<String, String> properties = PropertiesService.getInstance().getDatabaseProperties();
+
+        return DriverManager.getConnection(properties.get("url"), properties.get("username"), properties.get("password"));
     }
 
 }

@@ -1,21 +1,22 @@
 package service;
 
+import repository.ProfileRepository;
+import repository.UserRepository;
+import entity.Profile;
+
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class MailService implements Serializable {
 
     private static MailService mailService;
 
-    private static final String SMTP_USERNAME = "8b57e990161d0a";
-
-    private static final String SMTP_PASSWORD = "e0c6c44eeead3e";
-
-    private static final String SMTP_HOST = "smtp.mailtrap.io";
-
-    private static final String SMTP_PORT = "465";
+    public static String BASE_URL;
 
     private static Session session;
 
@@ -29,7 +30,7 @@ public class MailService implements Serializable {
         return mailService;
     }
 
-    private MimeMessage getMimeMessage(String email, String topic, String message) throws MessagingException {
+    private void sendMimeMessage(String email, String topic, String message) throws MessagingException {
 
         MimeMessage mimeMessage = new MimeMessage(session);
 
@@ -46,7 +47,35 @@ public class MailService implements Serializable {
 
         mimeMessage.setContent(mimeMultipart);
 
-        return mimeMessage;
+        Transport.send(mimeMessage);
+
+    }
+
+    public void sendNotification(Long profileId, Long eventId, HttpSession httpSession) {
+
+         ProfileRepository profileRepository = ProfileRepository.getInstance(httpSession);
+         UserRepository userRepository = UserRepository.getInstance(httpSession);
+
+         Profile profile = profileRepository.findById(profileId);
+         List<Profile> subscribers = profileRepository.getSubscribers(profileId);
+
+         String message = "Hey, there! Do you know that " + profile.getFirstName() + " " + profile.getLastName() + " started new event?<br/>Link here <a href='" + BASE_URL + "/event?id=" + eventId + "'>View event</a>";
+
+         for (Profile sub : subscribers) {
+
+             if (sub.getNotifyMe()) {
+
+                 try {
+
+                     sendMimeMessage(userRepository.findById(sub.getUserId()), "New Event Here!", message);
+
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                 }
+
+             }
+
+         }
 
     }
 
@@ -54,48 +83,46 @@ public class MailService implements Serializable {
 
         String message = "Dear, User! You were blocked by administrator because of: " + reason;
 
-        MimeMessage mimeMessage = getMimeMessage(email, "Blocked account", message);
-
-        Transport.send(mimeMessage);
+        sendMimeMessage(email, "Blocked account", message);
 
     }
 
     public void sendRecoveryToken(String email, String token) throws MessagingException {
 
-        String link = "http://localhost:8080/EventsHere/forgotPassword?token=" + token;
+        String link = BASE_URL + "/forgotPassword?token=" + token;
 
         String message = "Dear, User! Thank you for using our application. To recover your account password, please press button below. If you don't want to do it - just ignore this message.<br/><br/><a href='" + link + "' style='margin-left:30%;'>Recover password</a>";
 
-        MimeMessage mimeMessage = getMimeMessage(email, "Password recovery", message);
-
-        Transport.send(mimeMessage);
+        sendMimeMessage(email, "Password recovery", message);
 
     }
 
     public void sendActivationToken(String email, String token) throws MessagingException {
 
-        String link = "http://localhost:8080/EventsHere/registration?token=" + token;
+        String link = BASE_URL + "/registration?token=" + token;
 
         String message = "Welcome to Events Here! To activate your account, please follow link:<br/><br/><a href='" + link + "' style='margin-left:30%;'>Activate account</a>";
 
-        MimeMessage mimeMessage = getMimeMessage(email, "Account activation", message);
-
-        Transport.send(mimeMessage);
+        sendMimeMessage(email, "Account activation", message);
 
     }
 
     private static void init() {
 
+        Map<String, String> connectionProperties = PropertiesService.getInstance().getMailProperties();
+
+        BASE_URL = connectionProperties.get("base_url");
+
         Properties properties = new Properties();
 
         properties.put("mail.smtp.auth", true);
-        properties.put("mail.smtp.host", SMTP_HOST);
-        properties.put("mail.smtp.port", SMTP_PORT);
+        properties.put("mail.smtp.host", connectionProperties.get("host"));
+        properties.put("mail.smtp.port", connectionProperties.get("port"));
 
         session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(SMTP_USERNAME, SMTP_PASSWORD);
+                return new PasswordAuthentication(connectionProperties.get("username"), connectionProperties.get("password"));
             }
         });
     }

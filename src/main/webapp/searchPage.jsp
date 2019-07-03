@@ -21,7 +21,79 @@
 <script>
     $(document).ready(function() {
         $('#multi-select').dropdown();
+
+        <c:if test="${not empty oldTags && oldTags.size() > 0}">
+
+            var tags = [];
+
+            <c:forEach var="tag" items="${oldTags}">
+                tags.push('${tag}');
+            </c:forEach>
+
+            if (tags.length > 0) {
+
+                $('#multi-select').dropdown('set selected', tags);
+
+             }
+
+
+        </c:if>
+
     });
+
+    function today() {
+        var today_date = "${today}";
+        $("#from").val(today_date);
+        $("#to").val(today_date);
+
+        $("#today_item").attr("class", "item active");
+        $("#week_item").attr("class", "item");
+        $("#all_item").attr("class", "item");
+        $("#select_item").attr("class", "item");
+
+    }
+
+    function this_week() {
+
+        var today_date = "${today}";
+        var next_sunday = "${nextWeekBound}";
+
+        $("#from").val(today_date);
+        $("#to").val(next_sunday);
+
+        $("#today_item").attr("class", "item");
+        $("#week_item").attr("class", "item active");
+        $("#all_item").attr("class", "item");
+        $("#select_item").attr("class", "item");
+
+    }
+
+    function select_date() {
+        $('.ui.modal')
+          .modal('show')
+        ;
+    }
+
+    function submit() {
+        $("#from").val($("#from_select").val());
+        $("#to").val($("#to_select").val());
+
+        $("#today_item").attr("class", "item");
+        $("#week_item").attr("class", "item");
+        $("#all_item").attr("class", "item");
+        $("#select_item").attr("class", "item active");
+    }
+
+    function all_dates() {
+        $("#from").val('');
+        $("#to").val('');
+
+        $("#all_item").attr("class", "item active");
+        $("#today_item").attr("class", "item");
+        $("#week_item").attr("class", "item");
+        $("#select_item").attr("class", "item");
+    }
+
 </script>
 
 <div class="ui left fixed vertical menu">
@@ -76,7 +148,18 @@
       </div>
     </div>
 
-    <button type="submit" class="ui secondary button" style="margin-top: 6%;">
+    <div class="ui four item menu" style="width:50%;">
+      <a class="item" id="all_item" onclick="all_dates()">All Dates</a>
+      <a class="item" id="today_item" onclick="today()">Today</a>
+      <a class="item" id="week_item" onclick="this_week()">This week</a>
+      <a class="item" id="select_item" onclick="select_date()" id="select_date">Select date</a>
+
+        <input type="hidden" id="from" name="from">
+        <input type="hidden" id="to" name="to">
+
+    </div>
+
+    <button type="submit" class="ui secondary button" style="margin-top: 2%;">
       Find
     </button>
 
@@ -102,7 +185,7 @@
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
-                           <i class="calendar icon"></i> ${event.dateTime}
+                           <i class="calendar icon"></i> ${event.getFormattedDateTime()}
                       </div>
                       <div class="description" style="margin-bottom: 5%;">
                         ${event.description}
@@ -161,6 +244,35 @@
 
     </div>
 
+</div>
+
+<div class="ui modal">
+  <div class="ui icon header">
+    Select Date
+  </div>
+  <div class="content">
+    <div class="ui form">
+        <div class="ui grid" style="margin-top: 5%; margin-bottom: 5%;">
+          <div class="four wide column" style="margin-left: 23%;">
+            <h4 class="header">Date from</h4>
+            <input type='date' id="from_select">
+          </div>
+          <div class="four wide column" style="margin-left: 5%;">
+            <h4 class="header">Date to</h4>
+            <input type='date' id="to_select">
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="actions">
+   <div class="ui black deny button">
+         Cancel
+       </div>
+    <a class="ui green ok inverted button" style="margin-left: 5%; margin-right: 5%;" onclick="submit()">
+      <i class="checkmark icon"></i>
+      Submit
+    </a>
+  </div>
 </div>
 
 </div>

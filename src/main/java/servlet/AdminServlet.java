@@ -1,8 +1,8 @@
 package servlet;
 
-import dto.EventDto;
-import dto.ProfileDto;
-import dto.UserDto;
+import repository.EventRepository;
+import repository.ProfileRepository;
+import repository.UserRepository;
 import service.AuthenticationService;
 import service.OnlineService;
 
@@ -19,28 +19,28 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        EventDto eventDto = EventDto.getInstance(req.getSession());
-        UserDto userDto = UserDto.getInstance(req.getSession());
-        ProfileDto profileDto = ProfileDto.getInstance(req.getSession());
+        EventRepository eventRepository = EventRepository.getInstance(req.getSession());
+        UserRepository userRepository = UserRepository.getInstance(req.getSession());
+        ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
 
-        req.setAttribute( "isAdmin", UserDto.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
+        req.setAttribute( "isAdmin", UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY)));
 
         try {
 
             Long id = Long.parseLong(req.getParameter("id"));
 
             req.setAttribute("oldId", id);
-            req.setAttribute("events", eventDto.findByOwner(id));
+            req.setAttribute("events", eventRepository.findByOwner(id));
 
         } catch (Exception e) {}
 
         req.setAttribute("msg", req.getParameter("msg"));
 
         req.setAttribute("usersOnline", OnlineService.getInstance().getOnlineCount());
-        req.setAttribute("usersInSystem", userDto.count());
-        req.setAttribute("actualEvents", eventDto.countActual());
-        req.setAttribute("historyEvents", eventDto.countHistory());
-        req.setAttribute("users", profileDto.findAll());
+        req.setAttribute("usersInSystem", userRepository.count());
+        req.setAttribute("actualEvents", eventRepository.countActual());
+        req.setAttribute("historyEvents", eventRepository.countHistory());
+        req.setAttribute("users", profileRepository.findAll());
 
         req.getRequestDispatcher("/adminPage.jsp").include(req, resp);
 
