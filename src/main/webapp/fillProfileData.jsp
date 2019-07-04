@@ -53,14 +53,14 @@
 <form class="ui form" action="${pageContext.request.contextPath}/profile" method="post" style="margin-top: 5%;">
     <div class="field <c:if test='${not empty firstNameError}'>error</c:if>">
       <label>First Name</label>
-      <input type="text" name="firstName" placeholder="First Name" <c:if test="${not empty oldData && not empty oldData.firstName}">value="${oldData.firstName}"</c:if>>
+      <input type="text" name="firstName" pattern="[A-Za-z_]*" title="A-Za-z_ is allowed" placeholder="First Name" <c:if test="${not empty oldData && not empty oldData.firstName}">value="${oldData.firstName}"</c:if>>
        <c:if test="${not empty firstNameError}">
           <h4 class="header" style="color:red; margin-bottom: 10%;">${firstNameError}</h4>
         </c:if>
     </div>
     <div class="field <c:if test='${not empty lastNameError}'>error</c:if>">
       <label>Last Name</label>
-      <input type="text" name="lastName" placeholder="Last Name" <c:if test="${not empty oldData && not empty oldData.lastName}">value="${oldData.lastName}"</c:if>>
+      <input type="text" name="lastName" pattern="[A-Za-z_]*" title="A-Za-z_ is allowed" placeholder="Last Name" <c:if test="${not empty oldData && not empty oldData.lastName}">value="${oldData.lastName}"</c:if>>
        <c:if test="${not empty lastNameError}">
         <h4 class="header" style="color:red; margin-bottom: 10%;">${lastNameError}</h4>
       </c:if>
@@ -68,7 +68,7 @@
     <div class="field <c:if test='${not empty phoneNumberError}'>error</c:if>">
         <div class="ui right labeled input">
           <label for="amount" class="ui label">+</label>
-          <input type="text" name="phoneNumber" placeholder="Phone number" <c:if test="${not empty oldData && not empty oldData.phoneNumber}">value="${oldData.phoneNumber}"</c:if>>
+          <input type="text" name="phoneNumber" pattern="[0-9]{12}" title="12 digits" placeholder="Phone number" <c:if test="${not empty oldData && not empty oldData.phoneNumber}">value="${oldData.phoneNumber}"</c:if>>
         </div>
         <c:if test="${not empty phoneNumberError}">
                       <h4 class="header" style="color:red; margin-bottom: 10%;">${phoneNumberError}</h4>
