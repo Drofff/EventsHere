@@ -39,6 +39,7 @@ public class StorageServlet extends HttpServlet {
         Integer count = storageService.getPhotosCount(username);
 
         req.setAttribute("count", count);
+        req.setAttribute("limit", StorageService.STORAGE_LIMIT);
 
         if (count > 0) {
 

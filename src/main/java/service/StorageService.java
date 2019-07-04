@@ -18,6 +18,8 @@ public class StorageService implements Serializable {
 
     private static StorageService storageService;
 
+    public static final Integer STORAGE_LIMIT = 10;
+
     private static final String PHOTO_BASE = "data:image/jpeg;base64,";
 
     private static String base_url;
@@ -97,7 +99,7 @@ public class StorageService implements Serializable {
 
         }
 
-        if (new File(userDir.toString()).list().length < 5 && Files.notExists(filePath)) {
+        if (new File(userDir.toString()).list().length < STORAGE_LIMIT && Files.notExists(filePath)) {
             Files.copy(part.getInputStream(), filePath);
         }
 

@@ -61,7 +61,7 @@ function add_photo() {
             <h3 class="header">My Storage</h3>
           </div>
           <div class="four wide column">
-             <c:if test="${not empty count && count < 5}">
+             <c:if test="${not empty count && not empty limit && count < limit}">
                 <a class="fluid ui button" onclick="add_photo()" style="margin-left: 100%; width: 50%;">Add photo</a>
              </c:if>
           </div>
