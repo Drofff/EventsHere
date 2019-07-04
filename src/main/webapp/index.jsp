@@ -36,6 +36,14 @@
 </div>
 <div class="ui segment" style="margin-left: 20%; margin-top: 5%; width: 70%;">
 
+<c:if test="${not empty message}">
+    <div class="ui message" style="margin-left: 20%; width: 50%;">
+      <div class="header">
+        ${message}
+      </div>
+    </div>
+</c:if>
+
 <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
 
     <div class="ui two column grid">
