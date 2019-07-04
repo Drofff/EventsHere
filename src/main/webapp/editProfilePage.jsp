@@ -49,6 +49,7 @@
        <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
        <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
        <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+       <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
        <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
        <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
        <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>

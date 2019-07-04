@@ -53,6 +53,7 @@ function unvisit() {
     <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
     <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
     <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
     <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -63,7 +64,7 @@ function unvisit() {
 
 
  <div class="item">
-      <img class="ui large rounded image" src="${event.photoUrl}">
+      <img class="ui large rounded image" src="${eventPhoto}">
  <div class="content">
    <h2 class="header" style="margin-top: 5%; margin-bottom: 5%;">${event.name}</h2>
      <div class="meta" style="margin-bottom: 5%;">

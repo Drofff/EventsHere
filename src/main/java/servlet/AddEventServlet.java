@@ -7,6 +7,7 @@ import repository.UserRepository;
 import entity.Event;
 import entity.Profile;
 import service.AuthenticationService;
+import service.StorageService;
 import service.ValidationService;
 
 import javax.servlet.ServletException;
@@ -38,6 +39,8 @@ public class AddEventServlet extends HttpServlet {
         Boolean isAdmin = UserRepository.getInstance(req.getSession()).isAdmin((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
         req.setAttribute( "isAdmin", isAdmin);
+
+        req.setAttribute("storagePhotos", StorageService.getInstance().getAllPhotos(UserRepository.getInstance(req.getSession()).findById(profile.getUserId())));
 
         req.setAttribute("tags", hashTagRepository.findAll());
 

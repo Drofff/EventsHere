@@ -7,6 +7,7 @@ import entity.Event;
 import entity.Profile;
 import service.AuthenticationService;
 import service.SearchService;
+import service.StorageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -56,7 +57,7 @@ public class SearchServlet extends HttpServlet {
 
         } catch (Exception e) {}
 
-        req.setAttribute("events", eventList);
+        req.setAttribute("events", StorageService.putPhotos(eventList, req));
         req.setAttribute("tags", hashTagRepository.findAll());
 
         req.setAttribute("oldTags", SearchService.parseTags(req));

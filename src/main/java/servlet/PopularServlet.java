@@ -5,6 +5,7 @@ import repository.ProfileRepository;
 import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
+import service.StorageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,12 +35,12 @@ public class PopularServlet extends HttpServlet {
             if (type == null || type.isEmpty()) {
 
                 req.setAttribute("byLikes", true);
-                req.setAttribute("eventsByLikes", eventRepository.findPopularByLikes());
+                req.setAttribute("eventsByLikes", StorageService.putPhotos(eventRepository.findPopularByLikes(), req));
 
             } else if (type.equals("tags")) {
 
                 req.setAttribute("byTags", true);
-                req.setAttribute("eventsByTags", eventRepository.findPopularByTags());
+                req.setAttribute("eventsByTags", StorageService.putPhotos(eventRepository.findPopularByTags(), req));
 
             } else {
                 resp.sendRedirect(req.getContextPath());

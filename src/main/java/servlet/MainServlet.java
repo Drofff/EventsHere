@@ -1,10 +1,13 @@
 package servlet;
 
+import entity.Event;
+import entity.User;
 import repository.EventRepository;
 import repository.ProfileRepository;
 import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
+import service.StorageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "MainServlet", urlPatterns = {""})
 public class MainServlet extends HttpServlet {
@@ -29,7 +35,8 @@ public class MainServlet extends HttpServlet {
 
         EventRepository eventRepository = EventRepository.getInstance(req.getSession());
 
-        req.setAttribute("events", eventRepository.findAll(page));
+        req.setAttribute("events", StorageService.putPhotos(eventRepository.findAll(page), req));
+
 
         Long pagesCount = eventRepository.getPagesCount();
 

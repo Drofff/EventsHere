@@ -68,4 +68,8 @@ public class PropertiesService implements Serializable {
 
     }
 
+    public String getRootDir() {
+        return projectProperties.getProperty("app.user_dir");
+    }
+
 }

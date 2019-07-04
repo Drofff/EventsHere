@@ -34,6 +34,7 @@
     <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
     <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
     <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
     <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -62,21 +63,21 @@
 
   <div class="card">
     <div class="content">
-      <img class="right floated tiny ui image" src="${event.photoUrl}">
+      <img class="right floated tiny ui image" src="${event.key}">
       <div class="header">
-         ${event.name}
+         ${event.value.name}
       </div>
       <div class="meta">
-        ${event.getFormattedDateTime()}
+        ${event.value.getFormattedDateTime()}
       </div>
       <div class="description">
-        ${event.description}
+        ${event.value.description}
       </div>
     </div>
     <div class="extra content">
       <div class="ui two buttons">
-        <a class="ui basic green button" href="${pageContext.request.contextPath}/save?id=${event.id}">Edit</a>
-        <a class="ui basic red button" href="${pageContext.request.contextPath}/delete?id=${event.id}">Delete</a>
+        <a class="ui basic green button" href="${pageContext.request.contextPath}/save?id=${event.value.id}">Edit</a>
+        <a class="ui basic red button" href="${pageContext.request.contextPath}/delete?id=${event.value.id}">Delete</a>
       </div>
     </div>
   </div>

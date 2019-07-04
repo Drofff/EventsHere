@@ -64,6 +64,7 @@
     <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
     <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
     <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
     <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -87,24 +88,24 @@
 
                   <div class="ui card" style="margin-right:5%;">
                     <div class="content">
-                      <img class="ui avatar image" src="${event.owner.photoUrl}"> <a href="${pageContext.request.contextPath}/profile?id=${event.owner.id}"> ${event.owner.firstName} ${event.owner.lastName} </a>
+                      <img class="ui avatar image" src="${event.value.owner.photoUrl}"> <a href="${pageContext.request.contextPath}/profile?id=${event.value.owner.id}"> ${event.value.owner.firstName} ${event.value.owner.lastName} </a>
                     </div>
                     <div class="image">
-                      <img src="${event.photoUrl}">
+                      <img src="${event.key}">
                     </div>
                     <div class="content">
-                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}" style="margin-bottom: 5%;">${event.name}</a>
+                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}" style="margin-bottom: 5%;">${event.value.name}</a>
                       <span class="right floated">
-                      <a href="${pageContext.request.contextPath}/like?id=${event.id}">
+                      <a href="${pageContext.request.contextPath}/like?id=${event.value.id}">
                         <i class="heart outline like icon"></i>
                       </a>
-                        ${ fn:length(event.getLikes()) }
+                        ${ fn:length(event.value.getLikes()) }
                       </span>
                       <i class="users icon"></i>
-                      ${ fn:length(event.getMembers()) } Members
+                      ${ fn:length(event.value.getMembers()) } Members
                     </div>
                     <div class="extra content">
-                      <c:forEach var="tag" items="${event.hashTags}">
+                      <c:forEach var="tag" items="${event.value.hashTags}">
                              <a href="${pageContext.request.contextPath}/search?tag=${tag}">
                                <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
                              </a>

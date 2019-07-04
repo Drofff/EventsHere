@@ -29,6 +29,7 @@
     <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
     <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
     <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
     <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -56,18 +57,18 @@
 
                   <div class="item" style="margin-bottom: 5%;">
                     <div class="ui small image">
-                      <img src="${event.photoUrl}">
+                      <img src="${event.key}">
                     </div>
                     <div class="middle aligned content">
                       <div class="header">
-                        ${event.name}
+                        ${event.value.name}
                       </div>
                       <div class="description">
-                        <div class="ui label"><i class="users icon"></i> ${ fn:length(event.getMembers()) } Members</div>
-                        <div class="ui label"><i class="heart icon"></i> ${ fn:length(event.getLikes()) } Likes</div>
+                        <div class="ui label"><i class="users icon"></i> ${ fn:length(event.value.getMembers()) } Members</div>
+                        <div class="ui label"><i class="heart icon"></i> ${ fn:length(event.value.getLikes()) } Likes</div>
                       </div>
                       <div class="extra">
-                        <a class="ui right floated button" href="${pageContext.request.contextPath}/event?id=${event.id}">
+                        <a class="ui right floated button" href="${pageContext.request.contextPath}/event?id=${event.value.id}">
                           Details
                         </a>
                       </div>
@@ -91,25 +92,25 @@
 
                       <div class="card" style="margin-left: 5%;">
                         <div class="image">
-                          <img src="${event.value.photoUrl}">
+                          <img src="${event.key}">
                         </div>
                         <div class="content">
-                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}">${event.value.name}</a>
+                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.value.id}">${event.value.value.name}</a>
                           <div class="meta">
                             <a>Upcoming event</a>
                           </div>
                           <div class="description">
-                                ${event.value.description}
+                                ${event.value.value.description}
                           </div>
-                          <a class="ui red ribbon label" style="margin-top: 5%;" href="${pageContext.request.contextPath}/search?hash=${event.key}">${event.key}</a>
+                          <a class="ui red ribbon label" style="margin-top: 5%;" href="${pageContext.request.contextPath}/search?hash=${event.value.key}">${event.value.key}</a>
                         </div>
                         <div class="extra content">
                           <span class="right floated">
-                            ${ fn:length(event.value.getLikes()) } Likes
+                            ${ fn:length(event.value.value.getLikes()) } Likes
                           </span>
                           <span>
                             <i class="user icon"></i>
-                            ${ fn:length(event.value.getMembers()) } Members
+                            ${ fn:length(event.value.value.getMembers()) } Members
                           </span>
                         </div>
                       </div>

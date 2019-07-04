@@ -5,6 +5,7 @@ import repository.ProfileRepository;
 import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
+import service.StorageService;
 import service.ValidationService;
 
 import javax.servlet.ServletException;
@@ -78,7 +79,7 @@ public class ProfileServlet extends HttpServlet {
         if (profile != null) {
             EventRepository eventRepository = EventRepository.getInstance(session);
             req.setAttribute("history", eventRepository.getHistoryOf(profile.getUserId()));
-            req.setAttribute("events", eventRepository.findByOwner(profile.getUserId()));
+            req.setAttribute("events", StorageService.putPhotos(eventRepository.findByOwner(profile.getUserId()), req));
         }
 
         req.getRequestDispatcher("/profilePage.jsp").include(req, resp);

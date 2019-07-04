@@ -114,6 +114,7 @@
     <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
     <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
     <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
     <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -174,45 +175,45 @@
 
                   <div class="item">
                     <div class="image">
-                      <img src="${event.photoUrl}">
+                      <img src="${event.key}">
                     </div>
                     <div class="content">
-                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}" style="margin-bottom:4%; margin-top:2%;">${event.name}</a>
+                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}" style="margin-bottom:4%; margin-top:2%;">${event.value.name}</a>
                       <div class="meta">
                         <span class="cinema">
-                            <img class="ui avatar image" src="${event.owner.photoUrl}">
-                            <span><a href="${pageContext.request.contextPath}/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
+                            <img class="ui avatar image" src="${event.value.owner.photoUrl}">
+                            <span><a href="${pageContext.request.contextPath}/profile?id=${event.value.owner.id}">${event.value.owner.firstName} ${event.value.owner.lastName}</a></span>
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
-                           <i class="calendar icon"></i> ${event.getFormattedDateTime()}
+                           <i class="calendar icon"></i> ${event.value.getFormattedDateTime()}
                       </div>
                       <div class="description" style="margin-bottom: 5%;">
-                        ${event.description}
+                        ${event.value.description}
                       </div>
                       <div class="extra">
-                        <c:forEach var="tag" items="${event.hashTags}">
+                        <c:forEach var="tag" items="${event.value.hashTags}">
                          <a href="${pageContext.request.contextPath}/search?tag=${tag}">
                             <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
                          </a>
                         </c:forEach>
                       </div>
                       <div class="extra">
-                           <div class="ui label"><i class="users icon"></i> ${ fn:length(event.getMembers()) } Members</div>
+                           <div class="ui label"><i class="users icon"></i> ${ fn:length(event.value.getMembers()) } Members</div>
                       </div>
                       <div class="extra">
 
                                  <div class="ui labeled button" tabindex="0">
-                                     <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.id}">
+                                     <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.value.id}">
                                        <i class="heart icon"></i> Like
                                      </a>
                                      <a class="ui basic red left pointing label">
-                                       ${ fn:length(event.getLikes()) }
+                                       ${ fn:length(event.value.getLikes()) }
                                      </a>
                                  </div>
 
 
-                              <a class="ui right floated primary button" href="${pageContext.request.contextPath}/event?id=${event.id}" >
+                              <a class="ui right floated primary button" href="${pageContext.request.contextPath}/event?id=${event.value.id}" >
                                 Visit
                                 <i class="right chevron icon"></i>
                               </a>

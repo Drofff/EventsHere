@@ -34,6 +34,7 @@
     <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
     <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
     <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
     <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -104,10 +105,10 @@
                 <c:forEach var="event" items="${events}">
 
                       <div class="item" style="margin-top: 5%;">
-                        <img class="ui avatar image" src="${event.photoUrl}">
+                        <img class="ui avatar image" src="${event.key}">
                         <div class="content">
-                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}">${event.name}</a>
-                          <div class="description">${fn:length(event.getMembers())} Members</div>
+                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}">${event.value.name}</a>
+                          <div class="description">${fn:length(event.value.getMembers())} Members</div>
                         </div>
                       </div>
 

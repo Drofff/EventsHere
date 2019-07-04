@@ -6,6 +6,7 @@ import entity.Event;
 import entity.Profile;
 import repository.UserRepository;
 import service.AuthenticationService;
+import service.StorageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,7 +52,7 @@ public class SubscrEventsServlet extends HttpServlet {
 
         events.sort((x, y) -> (int) (x.getDateTime().toEpochSecond(zoneOffset) - y.getDateTime().toEpochSecond(zoneOffset)));
 
-        req.setAttribute("events", events);
+        req.setAttribute("events", StorageService.putPhotos(events, req));
 
         req.getRequestDispatcher("/subscrEventsPage.jsp").include(req, resp);
 

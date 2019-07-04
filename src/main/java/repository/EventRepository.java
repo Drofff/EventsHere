@@ -254,14 +254,19 @@ public class EventRepository implements Serializable {
 
             boolean create = true;
 
+            Event oldEvent = null;
+
             if (event.getId() != null) {
 
                 PreparedStatement preparedStatement = connection.prepareStatement(checkQuery);
 
                 preparedStatement.setLong(1, event.getId());
 
-                if (preparedStatement.executeQuery().next()) {
+                ResultSet oldRS = preparedStatement.executeQuery();
+
+                if (oldRS.next()) {
                     create = false;
+                    oldEvent = Event.parse(oldRS, session);
                 }
 
             }
@@ -295,7 +300,13 @@ public class EventRepository implements Serializable {
                 updatePreparedStatement.setString(1, event.getName());
                 updatePreparedStatement.setString(2, event.getDescription());
                 updatePreparedStatement.setTimestamp(3, Timestamp.valueOf(event.getDateTime()));
-                updatePreparedStatement.setString(4, event.getPhotoUrl());
+
+                if (event.getPhotoUrl() != null && !event.getPhotoUrl().isEmpty()) {
+                    updatePreparedStatement.setString(4, event.getPhotoUrl());
+                } else {
+                    updatePreparedStatement.setString(4, oldEvent.getPhotoUrl());
+                }
+
                 updatePreparedStatement.setLong(5, event.getId());
 
                 updatePreparedStatement.executeUpdate();

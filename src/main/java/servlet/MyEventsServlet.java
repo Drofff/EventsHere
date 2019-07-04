@@ -5,6 +5,7 @@ import repository.ProfileRepository;
 import repository.UserRepository;
 import entity.Profile;
 import service.AuthenticationService;
+import service.StorageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +24,7 @@ public class MyEventsServlet extends HttpServlet {
 
         Long userId = (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY);
 
-        req.setAttribute("events", eventRepository.findByOwner(userId));
+        req.setAttribute("events", StorageService.putPhotos(eventRepository.findByOwner(userId), req));
 
         req.setAttribute("history", eventRepository.getHistoryOf(userId));
 

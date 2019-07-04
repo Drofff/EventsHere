@@ -26,6 +26,10 @@
 
         $('#multi-select').dropdown();
 
+        $('.ui.fluid.selection.dropdown')
+          .dropdown()
+        ;
+
 
         <c:if test="${not empty oldData && not empty oldData.getHashTags()}">
 
@@ -50,11 +54,6 @@
 
         });
 
-        $("#photo").change(function() {
-
-            $("#photo_frame").html('<img class="ui medium rounded image" src="' + $("#photo").val() + '">');
-
-        });
 
     });
 
@@ -121,6 +120,7 @@
     <c:if test="${not empty isAdmin && isAdmin}"><a class="item" href="${pageContext.request.contextPath}/admin">Admin Page</a></c:if>
     <a class="item" href="${pageContext.request.contextPath}/profile">Profile</a>
     <a class="item" href="${pageContext.request.contextPath}/my">My Events Here</a>
+    <a class="item" href="${pageContext.request.contextPath}/storage">My Storage</a>
     <a class="item" href="${pageContext.request.contextPath}/popular">Popular</a>
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -147,13 +147,24 @@
       </div>
       <div class="field">
          <div class="two fields">
-           <div class="field <c:if test='${not empty photoUrlError}'>error</c:if>">
-             <input type="text" <c:if test="${not empty oldData && not empty oldData.photoUrl}">value="${oldData.photoUrl}"</c:if> name="photoUrl" id="photo" placeholder="Photo URL">
-             <c:if test="${not empty photoUrlError}">
-                  <h4 class="header" style="color:red; margin-bottom: 10%;">${photoUrlError}</h4>
-             </c:if>
-             <div id="photo_frame"></div>
-           </div>
+
+            <div class="field">
+            <label>Select photo</label>
+            <div class="ui fluid selection dropdown" style="height: 20px; width: 70%; margin-right: 3%; margin-left:1%;">
+              <input type="hidden" name="photoUrl">
+              <i class="dropdown icon"></i>
+              <div class="default text">Select photo</div>
+              <div class="menu">
+                <c:forEach var="photo" items="${storagePhotos}">
+                    <div class="item" data-value="${photo.key}">
+                      <img class="ui mini avatar image" src="${photo.value}">
+                      ${photo.key}
+                    </div>
+                </c:forEach>
+              </div>
+            </div>
+            </div>
+
             <div class="field">
              <input type="hidden" name="description" id="desc_field">
              <label>Description</label>
@@ -173,6 +184,7 @@
           </div>
       <div class="two fields">
           <div class="field" style="width: 50%;">
+                <label>Hash tags</label>
               <select class="ui fluid search dropdown" id = "multi-select" multiple="" name="hash">
                  <c:forEach var="tag" items="${tags}">
                     <option value="${tag}">${tag}</option>
@@ -182,7 +194,7 @@
                     <h4 class="header" style="color:red; margin-bottom: 10%;">${tagError}</h4>
                 </c:if>
            </div>
-           <div class="field">
+           <div class="field" style="margin-top:5%;">
             <div class="circular ui icon button" onclick="add_hash()">
                 <i class="plus icon"></i>
             </div>

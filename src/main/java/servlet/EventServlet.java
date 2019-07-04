@@ -6,6 +6,7 @@ import repository.UserRepository;
 import entity.Event;
 import entity.Profile;
 import service.AuthenticationService;
+import service.StorageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @WebServlet(name = "EventServlet", urlPatterns = {"/event"})
 public class EventServlet extends HttpServlet {
@@ -22,6 +25,8 @@ public class EventServlet extends HttpServlet {
 
         EventRepository eventRepository = EventRepository.getInstance(req.getSession());
         ProfileRepository profileRepository = ProfileRepository.getInstance(req.getSession());
+        StorageService storageService = StorageService.getInstance();
+        UserRepository userRepository = UserRepository.getInstance(req.getSession());
 
         try {
 
@@ -30,6 +35,7 @@ public class EventServlet extends HttpServlet {
             Event currentEvent = eventRepository.findById(id);
 
             req.setAttribute("event", currentEvent);
+            req.setAttribute("eventPhoto", storageService.getPhoto(userRepository.findById(currentEvent.getOwner().getUserId()), currentEvent.getPhotoUrl()));
 
             Profile profile = profileRepository.findByOwnerId( (Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 

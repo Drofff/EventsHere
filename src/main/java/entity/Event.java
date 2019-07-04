@@ -5,6 +5,8 @@ import repository.EventRepository;
 import repository.HashTagRepository;
 import repository.ProfileRepository;
 import org.hibernate.validator.constraints.NotBlank;
+import repository.UserRepository;
+import service.StorageService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
