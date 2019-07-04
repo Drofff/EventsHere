@@ -109,6 +109,7 @@
                           <a class="header" href="${pageContext.request.contextPath}/event?id=${event.id}">${event.name}</a>
                           <div class="description">${fn:length(event.getMembers())} Members</div>
                         </div>
+                      </div>
 
                 </c:forEach>
 

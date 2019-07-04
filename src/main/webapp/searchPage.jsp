@@ -222,6 +222,19 @@
 
               </c:forEach>
 
+        <c:if test="${not empty next}">
+            <a class="ui right labeled icon button" href="${next}" style="margin-top: 10%;">
+              <i class="right arrow icon"></i>
+              Next
+            </a>
+        </c:if>
+        <c:if test="${not empty previous}">
+            <a class="ui right labeled icon button" href="${previous}" style="margin-top: 10%;">
+              <i class="left arrow icon"></i>
+              Previous
+            </a>
+        </c:if>
+
        </c:when>
        <c:otherwise>
              <h3 class="ui header">Sorry, we can't find any events by your query</h3>

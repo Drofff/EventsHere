@@ -1,5 +1,6 @@
 package entity;
 
+import annotation.ActualDate;
 import repository.EventRepository;
 import repository.HashTagRepository;
 import repository.ProfileRepository;
@@ -7,6 +8,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,6 +30,7 @@ public class Event {
 
     private List<String> hashTags;
 
+    @ActualDate(message = "Maximum date you can select is year after today")
     @NotNull(message = "Please, specify date")
     private LocalDateTime dateTime;
 
@@ -36,7 +40,6 @@ public class Event {
 
     private List<Profile> likes;
 
-    @NotBlank(message = "Please, provide photo (url)")
     private String photoUrl;
 
     public Long getId() {
