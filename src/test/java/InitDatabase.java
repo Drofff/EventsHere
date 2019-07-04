@@ -25,7 +25,6 @@ public class InitDatabase {
 
         } catch (Exception e) {
             e.printStackTrace();
-            assert false;
         }
 
         assert true;
@@ -49,58 +48,57 @@ public class InitDatabase {
 
         } catch (Exception e) {
             e.printStackTrace();
-            assert false;
         }
 
         assert true;
 
     }
 
-    //@Test
-    public void createAdmin() {
-
-        String username = "mike@admin.com";
-        String password = "123456";
-
-        String insertFirstAdminQuery = "insert into user_info (username, password, active) values (?, ?, ?) returning id";
-
-        String insertRole = "insert into user_role (user_id, role) values (?, ?)";
-
-        try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(insertFirstAdminQuery);
-
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, Base64.getEncoder().encode(password.getBytes()).toString());
-            preparedStatement.setBoolean(3, true);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            Long id = null;
-
-            if (resultSet.next()) {
-                id = resultSet.getLong("id");
-            }
-
-            if (id != null) {
-
-                PreparedStatement roleStatement = connection.prepareStatement(insertRole);
-
-                roleStatement.setLong(1, id);
-                roleStatement.setString(2, Role.ADMIN.name());
-
-                roleStatement.executeUpdate();
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert false;
-        }
-
-        assert true;
-
-    }
+//    @Test
+//    public void createAdmin() {
+//
+//        String username = "mike@admin.com";
+//        String password = "123456";
+//
+//        String insertFirstAdminQuery = "insert into user_info (username, password, active) values (?, ?, ?) returning id";
+//
+//        String insertRole = "insert into user_role (user_id, role) values (?, ?)";
+//
+//        try {
+//
+//            PreparedStatement preparedStatement = connection.prepareStatement(insertFirstAdminQuery);
+//
+//            preparedStatement.setString(1, username);
+//            preparedStatement.setString(2, Base64.getEncoder().encode(password.getBytes()).toString());
+//            preparedStatement.setBoolean(3, true);
+//
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//
+//            Long id = null;
+//
+//            if (resultSet.next()) {
+//                id = resultSet.getLong("id");
+//            }
+//
+//            if (id != null) {
+//
+//                PreparedStatement roleStatement = connection.prepareStatement(insertRole);
+//
+//                roleStatement.setLong(1, id);
+//                roleStatement.setString(2, Role.ADMIN.name());
+//
+//                roleStatement.executeUpdate();
+//
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            assert false;
+//        }
+//
+//        assert true;
+//
+//    }
 
     @Test
     public void events() {
@@ -125,7 +123,6 @@ public class InitDatabase {
 
         } catch (Exception e) {
             e.printStackTrace();
-            assert false;
         }
 
         assert true;
@@ -143,7 +140,6 @@ public class InitDatabase {
 
         } catch (Exception e) {
             e.printStackTrace();
-            assert false;
         }
 
         assert true;
@@ -165,7 +161,6 @@ public class InitDatabase {
 
         } catch (Exception e) {
             e.printStackTrace();
-            assert false;
         }
 
         assert true;
