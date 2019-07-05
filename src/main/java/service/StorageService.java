@@ -101,9 +101,11 @@ public class StorageService implements Serializable {
 
             Files.createDirectory(basePath);
 
-            if (Files.notExists(userDir)) {
-                Files.createDirectory(userDir);
-            }
+        }
+
+        if (Files.notExists(userDir)) {
+
+            Files.createDirectory(userDir);
 
         }
 
