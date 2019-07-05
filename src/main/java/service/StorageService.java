@@ -162,8 +162,12 @@ public class StorageService implements Serializable {
 
         String [] photos = new File(Paths.get(base_url, username).toString()).list();
 
-        for (String s : photos) {
-            base64Photos.put(s, getPhoto(username, s));
+        if (photos != null) {
+
+            for (String s : photos) {
+                base64Photos.put(s, getPhoto(username, s));
+            }
+
         }
 
         return base64Photos;
