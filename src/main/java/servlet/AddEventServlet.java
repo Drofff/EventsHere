@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @WebServlet(name = "AddEventServlet", urlPatterns = {"/save"})
@@ -94,9 +95,28 @@ public class AddEventServlet extends HttpServlet {
 
         req.setAttribute("tags", hashTagRepository.findAll());
 
+        Event event = Event.parse(req);
+
         try {
 
-            Event event = Event.parse(req);
+            String data = req.getParameter("dateTime");
+
+            if (data != null) {
+                LocalDateTime.parse(data);
+            }
+
+        } catch (Exception e) {
+
+            req.setAttribute("dateTimeError", "Wrong data format");
+
+            req.setAttribute("oldData", event);
+
+            req.getRequestDispatcher("/addEventPage.jsp").include(req, resp);
+            return;
+
+        }
+
+        try {
 
             Map<String, String> errors = validationService.validate(event);
 

@@ -86,9 +86,16 @@ public class StorageService implements Serializable {
 
     public void savePhoto(String username, Part part) throws IOException {
 
+        String fileUri = part.getSubmittedFileName();
+
+        if (fileUri.matches(".*(\\\\).*")) {
+            String [] parts = fileUri.split("\\\\");
+            fileUri = parts[parts.length - 1];
+        }
+
         Path basePath = Paths.get(base_url);
         Path userDir = Paths.get(base_url, username);
-        Path filePath = Paths.get(base_url, username, part.getSubmittedFileName());
+        Path filePath = Paths.get(base_url, username, fileUri);
 
         if (Files.notExists(basePath)) {
 
