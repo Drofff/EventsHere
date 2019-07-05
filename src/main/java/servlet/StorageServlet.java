@@ -46,7 +46,7 @@ public class StorageServlet extends HttpServlet {
 
         if (count > 0) {
 
-            req.setAttribute("photos", storageService.getAllPhotos(username));
+            req.setAttribute("photos", storageService.getAllPhotosWithInfo(username, req.getSession()));
 
         }
 

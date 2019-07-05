@@ -5,6 +5,7 @@ import repository.EventRepository;
 import repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
@@ -119,15 +120,39 @@ public class StorageService implements Serializable {
 
     }
 
-    public void delete(String username, String fileName) throws IOException {
+    public void delete(String username, String fileName, HttpSession session) throws IOException {
 
         Path file = Paths.get(base_url, username, fileName);
 
-        if (Files.exists(file)) {
+        if (Files.exists(file) && !inUse(fileName, session)) {
 
             Files.delete(file);
 
         }
+
+    }
+
+    public Map<Map.Entry<String, String>, Boolean> getAllPhotosWithInfo(String username, HttpSession session) throws IOException {
+
+       Map<Map.Entry<String, String>, Boolean> result = new LinkedHashMap<>();
+
+       Map<String, String> allPhotos = getAllPhotos(username);
+
+       for (Map.Entry<String, String> photo : allPhotos.entrySet()) {
+
+           result.put(photo, inUse(photo.getKey(), session));
+
+       }
+
+       return result;
+
+    }
+
+    private Boolean inUse(String fileName, HttpSession session) {
+
+        EventRepository eventRepository = EventRepository.getInstance(session);
+
+        return eventRepository.existsByPhoto(fileName);
 
     }
 

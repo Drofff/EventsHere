@@ -23,7 +23,7 @@ public class DeletePhotoServlet extends HttpServlet {
 
             String username = UserRepository.getInstance(req.getSession()).findById((Long) req.getSession().getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY));
 
-            StorageService.getInstance().delete(username, fileName);
+            StorageService.getInstance().delete(username, fileName, req.getSession());
 
         } catch (Exception e) {
             e.printStackTrace();

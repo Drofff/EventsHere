@@ -237,6 +237,28 @@ public class EventRepository implements Serializable {
 
     }
 
+    public Boolean existsByPhoto(String fileName) {
+
+        String query = "select * from events where photo_url = ?";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, fileName);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
     public void save(Event event) {
 
         MailService mailService = MailService.getInstance();

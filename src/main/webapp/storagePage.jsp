@@ -87,14 +87,24 @@ function add_photo() {
 
                           <div class="ui fluid card">
                             <div class="ui medium image">
-                              <img src="${photo.value}">
+                              <img src="${photo.key.value}">
                             </div>
                             <div class="content">
-                             <input type="hidden" value="${photo.key}" name="fileName">
-                            <button type="submit" class="ui button" style="margin-top: 7%;">
-                                Delete
-                            </button>
-                            </div>
+                           <c:choose>
+
+                                 <c:when test="${photo.value}">
+                                    <h4 class="header" style="margin-top: 7%;">In use</h4>
+                                 </c:when>
+                                 <c:otherwise>
+                                    <input type="hidden" value="${photo.key.key}" name="fileName">
+                                    <button type="submit" class="ui button" style="margin-top: 7%;">
+                                        Delete
+                                    </button>
+                                 </c:otherwise>
+
+                           </c:choose>
+                           </div>
+
                           </div>
                       </form>
 
