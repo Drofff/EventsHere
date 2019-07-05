@@ -31,7 +31,7 @@ public class StorageService implements Serializable {
 
         if (storageService == null) {
             storageService = new StorageService();
-            base_url = System.getProperty("user.dir") + PropertiesService.getInstance().getRootDir();
+            base_url = PropertiesService.getInstance().getRootDir();
         }
 
         return storageService;
