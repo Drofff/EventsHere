@@ -92,7 +92,7 @@
 
                       <div class="card" style="margin-left: 5%;">
                         <div class="image">
-                          <img src="${event.key}">
+                          <img src="${event.key}" style="max-height: 200px;">
                         </div>
                         <div class="content">
                           <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.value.id}">${event.value.value.name}</a>
