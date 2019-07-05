@@ -56,6 +56,14 @@ function add_photo() {
 
     <div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
 
+        <c:if test="${not empty message}">
+            <div class="ui error message" style="margin-left: 20%; width: 50%; margin-bottom: 5%;">
+              <div class="header">
+                ${message}
+              </div>
+            </div>
+        </c:if>
+
         <div class="ui grid" style="margin-bottom: 5%;">
           <div class="four wide column">
             <h3 class="header">My Storage</h3>

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 @WebServlet(name = "StorageServlet", urlPatterns = {"/storage"})
 @MultipartConfig
@@ -35,6 +34,10 @@ public class StorageServlet extends HttpServlet {
 
         req.setAttribute("name", profile.getFirstName() + " " + profile.getLastName());
         req.setAttribute("photoUrl", profile.getPhotoUrl());
+
+        req.setAttribute("message", req.getParameter("message"));
+
+        req.setAttribute("isAdmin", UserRepository.getInstance(req.getSession()).isAdmin(userId));
 
         Integer count = storageService.getPhotosCount(username);
 
@@ -62,7 +65,16 @@ public class StorageServlet extends HttpServlet {
 
             StorageService storageService = StorageService.getInstance();
 
+            if (storageService.getAllPhotos(username).entrySet().stream().anyMatch(x -> x.getKey().equals(part.getSubmittedFileName()))) {
+
+                resp.sendRedirect(req.getContextPath() + "/storage?message=File with such name already exists");
+                return;
+
+            }
+
             storageService.savePhoto(username, part);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
