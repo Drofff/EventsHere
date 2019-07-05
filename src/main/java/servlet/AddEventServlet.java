@@ -95,6 +95,8 @@ public class AddEventServlet extends HttpServlet {
 
         req.setAttribute("tags", hashTagRepository.findAll());
 
+        req.setAttribute("storagePhotos", StorageService.getInstance().getAllPhotos(UserRepository.getInstance(req.getSession()).findById(profile.getUserId())));
+
         Event event = Event.parse(req);
 
         try {

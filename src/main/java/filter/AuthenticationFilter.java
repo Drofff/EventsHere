@@ -23,8 +23,6 @@ public class AuthenticationFilter implements Filter {
         unsecuredUrls.add("/forgotPassword");
     }
 
-
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
@@ -46,8 +44,7 @@ public class AuthenticationFilter implements Filter {
 
         if (session.getAttribute(AuthenticationService.USER_AUTHENTICATION_KEY) == null) {
 
-            if (!httpServletRequest.getRequestURI().matches(".*(/login).*")) {
-
+            if (unsecuredUrls.stream().noneMatch(x -> httpServletRequest.getRequestURI().matches(".*(" + x + ").*"))) {
                 session.setAttribute("redirect_to", httpServletRequest.getRequestURI());
             }
 
