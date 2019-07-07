@@ -82,9 +82,15 @@
                     $("#msg").html("<h4 class='header' style='color: green'>Saved</h4>");
                     $("#hash_tag").val('');
 
+                    var old_val = $("#multi-select").dropdown('get value');
+
                     $.get('${pageContext.request.contextPath}/hash', function(result) {
 
                         $("#multi-select").html(result);
+
+                        $("#multi-select").dropdown('clear');
+
+                        $("#multi-select").dropdown('set selected', old_val);
 
                     });
 
@@ -135,15 +141,33 @@
           <input type="hidden" value="${oldData.id}" name="id">
        </c:if>
       <div class="field">
-        <label>Name</label>
         <div class="two fields">
           <div class="field <c:if test='${not empty nameError}'>error</c:if>">
+            <label>Name</label>
             <input type="text" name="name" <c:if test="${not empty oldData && not empty oldData.name}">value="${oldData.name}"</c:if> placeholder="Event's name">
           <c:if test="${not empty nameError}">
             <h4 class="header" style="color:red; margin-bottom: 10%;">${nameError}</h4>
           </c:if>
           </div>
         </div>
+      </div>
+      <div class="field">
+       <div class="two fields">
+         <div class="field <c:if test='${not empty cityError}'>error</c:if>">
+             <label>City</label>
+           <input type="text" name="city" <c:if test="${not empty oldData && not empty oldData.city}">value="${oldData.city}"</c:if> placeholder="City">
+         <c:if test="${not empty cityError}">
+           <h4 class="header" style="color:red; margin-bottom: 10%;">${cityError}</h4>
+         </c:if>
+         </div>
+         <div class="field <c:if test='${not empty addressError}'>error</c:if>">
+             <label>Address</label>
+           <input type="text" name="address" <c:if test="${not empty oldData && not empty oldData.address}">value="${oldData.address}"</c:if> placeholder="Address">
+         <c:if test="${not empty addressError}">
+           <h4 class="header" style="color:red; margin-bottom: 10%;">${addressError}</h4>
+         </c:if>
+         </div>
+       </div>
       </div>
       <div class="field">
          <div class="two fields">

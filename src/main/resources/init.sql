@@ -2,7 +2,7 @@ create database if not exists events;
 create table if not exists user_info ( id serial primary key, username varchar not null, password varchar not null, active boolean );
 create table if not exists user_role ( user_id bigint not null, role varchar not null, PRIMARY KEY (user_id, role));
 create table if not exists session_token (user_id bigint not null, token varchar not null, PRIMARY KEY(user_id, token));
-create table if not exists events ( id serial primary key, name varchar not null, description varchar not null, owner_id bigint not null, photo_url varchar, date_time timestamp );
+create table if not exists events ( id serial primary key, name varchar not null, description varchar not null, address varchar, city varchar, owner_id bigint not null, photo_url varchar, date_time timestamp );
 create table if not exists event_likes (event_id bigint not null, profile_id bigint not null, PRIMARY KEY (event_id, profile_id));
 create table if not exists event_members (event_id bigint not null, profile_id bigint not null, PRIMARY KEY (event_id, profile_id));
 create table if not exists event_tags (event_id bigint not null, tag_id bigint not null, PRIMARY KEY(event_id, tag_id));

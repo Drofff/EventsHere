@@ -1,18 +1,16 @@
 package entity;
 
 import annotation.ActualDate;
+import annotation.Address;
+import org.hibernate.validator.constraints.NotBlank;
 import repository.EventRepository;
 import repository.HashTagRepository;
 import repository.ProfileRepository;
-import org.hibernate.validator.constraints.NotBlank;
-import repository.UserRepository;
-import service.StorageService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -37,6 +35,12 @@ public class Event {
     private LocalDateTime dateTime;
 
     private List<Profile> members;
+
+    @Address(message = "Please, enter address")
+    private String address;
+
+    @Address(message = "Please, enter name of city")
+    private String city;
 
     private Profile owner;
 
@@ -78,6 +82,26 @@ public class Event {
         }
 
         this.dateTime = LocalDateTime.parse(dateTime, dateTimeFormatter);
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getFormattedAddress() {
+        return this.city + ", " + this.address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getName() {
@@ -148,6 +172,8 @@ public class Event {
 
         event.setId(id);
         event.setDescription(resultSet.getString("description"));
+        event.setAddress(resultSet.getString("address"));
+        event.setCity(resultSet.getString("city"));
         event.setName(resultSet.getString("name"));
         event.setOwner(profileRepository.findByOwnerId(resultSet.getLong("owner_id")));
         event.setPhotoUrl(resultSet.getString("photo_url"));
@@ -171,6 +197,8 @@ public class Event {
 
         event.setName(req.getParameter("name"));
         event.setDescription(req.getParameter("description"));
+        event.setAddress(req.getParameter("address"));
+        event.setCity(req.getParameter("city"));
 
         String dateTime = req.getParameter("dateTime");
 

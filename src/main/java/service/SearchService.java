@@ -50,6 +50,7 @@ public class SearchService implements Serializable {
 
         String name = req.getParameter("name");
         String hashTags = req.getParameter("hash");
+        String city = req.getParameter("city");
 
         Integer pageNumber = 0;
 
@@ -79,6 +80,22 @@ public class SearchService implements Serializable {
         } else if (hashTags != null && !hashTags.isEmpty()) {
 
             events = eventRepository.findByHashtag(parseTags(req));
+
+        }
+
+        if (city != null) {
+
+            String [] cities = req.getParameterValues("city");
+
+            if (cities != null) {
+
+                List<String> citiesList = Arrays.asList(cities);
+
+                events = events.stream().filter(x -> citiesList.contains(x.getCity())).collect(Collectors.toList());
+
+                req.setAttribute("oldCities", citiesList);
+
+            }
 
         }
 

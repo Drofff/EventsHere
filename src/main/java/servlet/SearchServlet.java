@@ -1,5 +1,6 @@
 package servlet;
 
+import repository.EventRepository;
 import repository.HashTagRepository;
 import repository.ProfileRepository;
 import repository.UserRepository;
@@ -31,6 +32,7 @@ public class SearchServlet extends HttpServlet {
 
         SearchService searchService = SearchService.getInstance(session);
         HashTagRepository hashTagRepository = HashTagRepository.getInstance(session);
+        EventRepository eventRepository = EventRepository.getInstance(session);
         ProfileRepository profileRepository = ProfileRepository.getInstance(session);
 
         List<Event> eventList = searchService.search(req);
@@ -59,6 +61,7 @@ public class SearchServlet extends HttpServlet {
 
         req.setAttribute("events", StorageService.putPhotos(eventList, req));
         req.setAttribute("tags", hashTagRepository.findAll());
+        req.setAttribute("cities", eventRepository.getCities());
 
         req.setAttribute("oldTags", SearchService.parseTags(req));
 

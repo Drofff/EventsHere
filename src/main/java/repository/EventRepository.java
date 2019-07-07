@@ -265,10 +265,10 @@ public class EventRepository implements Serializable {
 
         String checkQuery = "select * from events where id = ?";
 
-        String addQuery = "insert into events (name, description, date_time, owner_id, photo_url) values (?, ?, ?, ?, ?) returning id";
+        String addQuery = "insert into events (name, description, date_time, owner_id, photo_url, city, address) values (?, ?, ?, ?, ?, ?, ?) returning id";
         String addHashTagQuery = "insert into event_tags (event_id, tag_id) values (?, ( select id from hashtag where name = ?) )";
 
-        String updateQuery = "update events set name = ?, description = ?, date_time = ?, photo_url = ? where id = ?";
+        String updateQuery = "update events set name = ?, description = ?, date_time = ?, photo_url = ?, city = ?, address = ? where id = ?";
 
         String deleteTag = "delete from event_tags where event_id = ?";
 
@@ -303,6 +303,8 @@ public class EventRepository implements Serializable {
                 addEventStatement.setString(2, event.getDescription());
                 addEventStatement.setTimestamp(3, Timestamp.valueOf(event.getDateTime()));
                 addEventStatement.setLong(4, event.getOwner().getUserId());
+                addEventStatement.setString(6, event.getCity());
+                addEventStatement.setString(7, event.getAddress());
 
                 if (event.getPhotoUrl() == null || event.getPhotoUrl().isEmpty()) {
                     throw new Exception("Photo is empty");
@@ -334,7 +336,11 @@ public class EventRepository implements Serializable {
                     updatePreparedStatement.setString(4, oldEvent.getPhotoUrl());
                 }
 
-                updatePreparedStatement.setLong(5, event.getId());
+                updatePreparedStatement.setString(5, event.getCity());
+
+                updatePreparedStatement.setString(6, event.getAddress());
+
+                updatePreparedStatement.setLong(7, event.getId());
 
                 updatePreparedStatement.executeUpdate();
 
@@ -514,6 +520,33 @@ public class EventRepository implements Serializable {
         }
 
         return profiles;
+    }
+
+    public Set<String> getCities() {
+
+        TreeSet<String> cities = new TreeSet<>();
+
+        String query = "select city from events";
+
+        try {
+
+            ResultSet resultSet = connection.prepareStatement(query).executeQuery();
+
+            while (resultSet.next()) {
+
+                String city = resultSet.getString("city");
+
+                if (city != null) {
+                    cities.add(city);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cities;
+
     }
 
     public Long getPagesCount() {

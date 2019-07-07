@@ -88,25 +88,25 @@
 
                   <div class="ui card" style="margin-right:5%;">
                     <div class="content">
-                      <img class="ui avatar image" src="${event.value.owner.photoUrl}"> <a href="${pageContext.request.contextPath}/profile?id=${event.value.owner.id}"> ${event.value.owner.firstName} ${event.value.owner.lastName} </a>
+                      <img class="ui avatar image" src="${event.key.owner.photoUrl}"> <a href="${pageContext.request.contextPath}/profile?id=${event.key.owner.id}"> ${event.key.owner.firstName} ${event.key.owner.lastName} </a>
                     </div>
                     <div class="image">
-                      <img src="${event.key}">
+                      <img src="${event.value}">
                     </div>
                     <div class="content">
-                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}" style="margin-bottom: 5%;">${event.value.name}</a>
+                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.key.id}" style="margin-bottom: 5%;">${event.key.name}</a>
                       <span class="right floated">
-                      <a href="${pageContext.request.contextPath}/like?id=${event.value.id}">
+                      <a href="${pageContext.request.contextPath}/like?id=${event.key.id}">
                         <i class="heart outline like icon"></i>
                       </a>
-                        ${ fn:length(event.value.getLikes()) }
+                        ${ fn:length(event.key.getLikes()) }
                       </span>
                       <i class="users icon"></i>
-                      ${ fn:length(event.value.getMembers()) } Members
+                      ${ fn:length(event.key.getMembers()) } Members
                     </div>
                     <div class="extra content">
-                      <c:forEach var="tag" items="${event.value.hashTags}">
-                             <a href="${pageContext.request.contextPath}/search?tag=${tag}">
+                      <c:forEach var="tag" items="${event.key.hashTags}">
+                             <a href="${pageContext.request.contextPath}/search?hash=${tag}">
                                <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
                              </a>
                             </c:forEach>

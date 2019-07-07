@@ -115,6 +115,14 @@ public class AddEventServlet extends HttpServlet {
 
             req.setAttribute("dateTimeError", "Wrong data format");
 
+            String oldDescription = event.getDescription();
+
+            oldDescription = oldDescription.replace("\"", "\'\'");
+
+            oldDescription = oldDescription.replace("\r\n", "\\n");
+
+            event.setDescription(oldDescription);
+
             req.setAttribute("oldData", event);
 
             req.getRequestDispatcher("/addEventPage.jsp").include(req, resp);

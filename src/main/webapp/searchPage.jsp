@@ -21,6 +21,7 @@
 <script>
     $(document).ready(function() {
         $('#multi-select').dropdown();
+        $('#cityselect').dropdown();
 
         <c:if test="${not empty oldTags && oldTags.size() > 0}">
 
@@ -36,6 +37,22 @@
 
              }
 
+
+        </c:if>
+
+        <c:if test="${not empty oldCities && oldCities.size() > 0}">
+
+            var cities = [];
+
+            <c:forEach var="oldCity" items="${oldCities}">
+                cities.push('${oldCity}');
+            </c:forEach>
+
+            if (cities.length > 0) {
+
+                $('#cityselect').dropdown('set selected', cities);
+
+             }
 
         </c:if>
 
@@ -132,6 +149,7 @@
             <div class="ui form">
               <div class="field">
                 <select class="ui fluid search dropdown" id ="multi-select" multiple="" name="hash">
+                    <option value="">Hash tag</option>
                    <c:forEach var="tag" items="${tags}">
                       <option value="${tag}">${tag}</option>
                    </c:forEach>
@@ -147,16 +165,36 @@
 
         </div>
       </div>
+
+    <div class="row">
+
+     <div class="column">
+
+        <div class="ui four item menu">
+          <a class="item" id="all_item" onclick="all_dates()">All Dates</a>
+          <a class="item" id="today_item" onclick="today()">Today</a>
+          <a class="item" id="week_item" onclick="this_week()">This week</a>
+          <a class="item" id="select_item" onclick="select_date()" id="select_date">Select date</a>
+
+            <input type="hidden" id="from" name="from">
+            <input type="hidden" id="to" name="to">
+
+        </div>
+
+     </div>
+
+     <div class="column">
+
+        <select class="ui fluid search dropdown" id="cityselect" name="city" multiple="" style="width: 60%;">
+          <option value="">City</option>
+              <c:forEach var="city" items="${cities}">
+                <option value="${city}">${city}</option>
+              </c:forEach>
+        </select>
+
+     </div>
+
     </div>
-
-    <div class="ui four item menu" style="width:50%;">
-      <a class="item" id="all_item" onclick="all_dates()">All Dates</a>
-      <a class="item" id="today_item" onclick="today()">Today</a>
-      <a class="item" id="week_item" onclick="this_week()">This week</a>
-      <a class="item" id="select_item" onclick="select_date()" id="select_date">Select date</a>
-
-        <input type="hidden" id="from" name="from">
-        <input type="hidden" id="to" name="to">
 
     </div>
 
@@ -175,42 +213,42 @@
 
                   <div class="item">
                     <div class="ui image medium">
-                      <img src="${event.key}" style="max-width: 400px;">
+                      <img src="${event.value}" style="max-width: 400px;">
                     </div>
                     <div class="content" style="margin-left: 3%;">
-                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}" style="margin-bottom:4%; margin-top:2%;">${event.value.name}</a>
+                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.key.id}" style="margin-bottom:4%; margin-top:2%;">${event.key.name}</a>
                       <div class="meta">
                         <span class="cinema">
-                            <img class="ui avatar image" src="${event.value.owner.photoUrl}">
-                            <span><a href="${pageContext.request.contextPath}/profile?id=${event.value.owner.id}">${event.value.owner.firstName} ${event.value.owner.lastName}</a></span>
+                            <img class="ui avatar image" src="${event.key.owner.photoUrl}">
+                            <span><a href="${pageContext.request.contextPath}/profile?id=${event.key.owner.id}">${event.key.owner.firstName} ${event.key.owner.lastName}</a></span>
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
-                           <i class="calendar icon"></i> ${event.value.getFormattedDateTime()}
+                           <i class="calendar icon"></i> ${event.key.getFormattedDateTime()}
                       </div>
                       <div class="extra">
-                        <c:forEach var="tag" items="${event.value.hashTags}">
-                         <a href="${pageContext.request.contextPath}/search?tag=${tag}">
+                        <c:forEach var="tag" items="${event.key.hashTags}">
+                         <a href="${pageContext.request.contextPath}/search?hash=${tag}">
                             <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
                          </a>
                         </c:forEach>
                       </div>
                       <div class="extra">
-                           <div class="ui label"><i class="users icon"></i> ${ fn:length(event.value.getMembers()) } Members</div>
+                           <div class="ui label"><i class="users icon"></i> ${ fn:length(event.key.getMembers()) } Members</div>
                       </div>
                       <div class="extra">
 
                                  <div class="ui labeled button" tabindex="0">
-                                     <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.value.id}">
+                                     <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.key.id}">
                                        <i class="heart icon"></i> Like
                                      </a>
                                      <a class="ui basic red left pointing label">
-                                       ${ fn:length(event.value.getLikes()) }
+                                       ${ fn:length(event.key.getLikes()) }
                                      </a>
                                  </div>
 
 
-                              <a class="ui right floated primary button" href="${pageContext.request.contextPath}/event?id=${event.value.id}" >
+                              <a class="ui right floated primary button" href="${pageContext.request.contextPath}/event?id=${event.key.id}" >
                                 Visit
                                 <i class="right chevron icon"></i>
                               </a>

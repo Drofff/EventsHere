@@ -42,6 +42,12 @@ public class PropertiesService implements Serializable {
 
     }
 
+    public String getGoogleMapsUrl() {
+
+        return projectProperties.getProperty("google.maps");
+
+    }
+
     public Map<String, String> getDatabaseProperties() {
 
         Map<String, String> connectionProperties = new HashMap<>();

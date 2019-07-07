@@ -71,35 +71,35 @@
 
                   <div class="item" style="margin-top:4%;">
                     <div class="ui image medium">
-                      <img src="${event.key}" style="max-width: 400px;">
+                      <img src="${event.value}" style="max-width: 400px;">
                     </div>
                     <div class="content" style="margin-left: 3%;">
-                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}" style="margin-bottom:4%; margin-top:2%;">${event.value.name}</a>
+                      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.key.id}" style="margin-bottom:4%; margin-top:2%;">${event.key.name}</a>
                       <div class="meta">
                         <span class="cinema">
-                            <img class="ui avatar image" src="${event.value.owner.photoUrl}">
-                            <span><a href="${pageContext.request.contextPath}/profile?id=${event.value.owner.id}">${event.value.owner.firstName} ${event.value.owner.lastName}</a></span>
+                            <img class="ui avatar image" src="${event.key.owner.photoUrl}">
+                            <span><a href="${pageContext.request.contextPath}/profile?id=${event.key.owner.id}">${event.key.owner.firstName} ${event.key.owner.lastName}</a></span>
                         </span>
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
-                           <i class="calendar icon"></i> ${event.value.getFormattedDateTime()}
+                           <i class="calendar icon"></i> ${event.key.getFormattedDateTime()}
                       </div>
                       <div class="extra" style="margin-bottom: 7%;">
-                           <div class="ui label"><i class="users icon"></i> ${ fn:length(event.value.getMembers()) } Members</div>
+                           <div class="ui label"><i class="users icon"></i> ${ fn:length(event.key.getMembers()) } Members</div>
                       </div>
                       <div class="extra">
 
                                  <div class="ui labeled button" tabindex="0">
-                                     <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.value.id}">
+                                     <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.key.id}">
                                        <i class="heart icon"></i> Like
                                      </a>
                                      <a class="ui basic red left pointing label">
-                                       ${ fn:length(event.value.getLikes()) }
+                                       ${ fn:length(event.key.getLikes()) }
                                      </a>
                                  </div>
 
 
-                              <a class="ui right floated primary button" href="${pageContext.request.contextPath}/event?id=${event.value.id}">
+                              <a class="ui right floated primary button" href="${pageContext.request.contextPath}/event?id=${event.key.id}">
                                 Visit
                                 <i class="right chevron icon"></i>
                               </a>

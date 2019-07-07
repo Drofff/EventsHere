@@ -63,18 +63,18 @@
 
   <div class="card">
     <div class="content">
-      <img class="right floated tiny ui image" src="${event.key}">
-      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}">
-         ${event.value.name}
+      <img class="right floated tiny ui image" src="${event.value}">
+      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.key.id}">
+         ${event.key.name}
       </a>
       <div class="meta">
-        ${event.value.getFormattedDateTime()}
+        ${event.key.getFormattedDateTime()}
       </div>
     </div>
     <div class="extra content">
       <div class="ui two buttons">
-        <a class="ui basic green button" href="${pageContext.request.contextPath}/save?id=${event.value.id}">Edit</a>
-        <a class="ui basic red button" href="${pageContext.request.contextPath}/delete?id=${event.value.id}">Delete</a>
+        <a class="ui basic green button" href="${pageContext.request.contextPath}/save?id=${event.key.id}">Edit</a>
+        <a class="ui basic red button" href="${pageContext.request.contextPath}/delete?id=${event.key.id}">Delete</a>
       </div>
     </div>
   </div>

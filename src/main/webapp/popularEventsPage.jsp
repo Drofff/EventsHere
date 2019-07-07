@@ -57,18 +57,18 @@
 
                   <div class="item" style="margin-bottom: 5%;">
                     <div class="ui small image">
-                      <img src="${event.key}">
+                      <img src="${event.value}">
                     </div>
                     <div class="middle aligned content">
                       <div class="header">
-                        ${event.value.name}
+                        ${event.key.name}
                       </div>
                       <div class="description">
-                        <div class="ui label"><i class="users icon"></i> ${ fn:length(event.value.getMembers()) } Members</div>
-                        <div class="ui label"><i class="heart icon"></i> ${ fn:length(event.value.getLikes()) } Likes</div>
+                        <div class="ui label"><i class="users icon"></i> ${ fn:length(event.key.getMembers()) } Members</div>
+                        <div class="ui label"><i class="heart icon"></i> ${ fn:length(event.key.getLikes()) } Likes</div>
                       </div>
                       <div class="extra">
-                        <a class="ui right floated button" href="${pageContext.request.contextPath}/event?id=${event.value.id}">
+                        <a class="ui right floated button" href="${pageContext.request.contextPath}/event?id=${event.key.id}">
                           Details
                         </a>
                       </div>
@@ -92,22 +92,22 @@
 
                       <div class="card" style="margin-left: 5%;">
                         <div class="image">
-                          <img src="${event.key}" style="max-height: 200px;">
+                          <img src="${event.value}" style="max-height: 200px;">
                         </div>
                         <div class="content">
-                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.value.id}">${event.value.value.name}</a>
+                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.key.value.id}">${event.key.value.name}</a>
                           <div class="meta">
-                            <a>${event.value.value.getFormattedDateTime()}</a>
+                            <a>${event.key.value.getFormattedDateTime()}</a>
                           </div>
-                          <a class="ui red ribbon label" style="margin-top: 5%;" href="${pageContext.request.contextPath}/search?hash=${event.value.key}">${event.value.key}</a>
+                          <a class="ui red ribbon label" style="margin-top: 5%;" href="${pageContext.request.contextPath}/search?hash=${event.key.key}">${event.key.key}</a>
                         </div>
                         <div class="extra content">
                           <span class="right floated">
-                            ${ fn:length(event.value.value.getLikes()) } Likes
+                            ${ fn:length(event.key.value.getLikes()) } Likes
                           </span>
                           <span>
                             <i class="user icon"></i>
-                            ${ fn:length(event.value.value.getMembers()) } Members
+                            ${ fn:length(event.key.value.getMembers()) } Members
                           </span>
                         </div>
                       </div>

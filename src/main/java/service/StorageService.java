@@ -38,18 +38,18 @@ public class StorageService implements Serializable {
 
     }
 
-    public static Map<String, Event> putPhotos(List<Event> eventList, HttpServletRequest request) {
+    public static Map<Event, String> putPhotos(List<Event> eventList, HttpServletRequest request) {
 
         StorageService storageService = StorageService.getInstance();
         UserRepository userRepository = UserRepository.getInstance(request.getSession());
 
-        Map<String, Event> photoAndEvents = new LinkedHashMap<>();
+        Map<Event, String> photoAndEvents = new LinkedHashMap<>();
 
         for (Event event : eventList) {
 
             try {
 
-                photoAndEvents.put(storageService.getPhoto(userRepository.findById(event.getOwner().getUserId()), event.getPhotoUrl()), event);
+                photoAndEvents.put(event, storageService.getPhoto(userRepository.findById(event.getOwner().getUserId()), event.getPhotoUrl()));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -61,18 +61,18 @@ public class StorageService implements Serializable {
 
     }
 
-    public static Map<String, Map.Entry<String, Event>> putPhotos(Map<String, Event> eventMap, HttpServletRequest request) {
+    public static Map<Map.Entry<String, Event>, String> putPhotos(Map<String, Event> eventMap, HttpServletRequest request) {
 
         StorageService storageService = StorageService.getInstance();
         UserRepository userRepository = UserRepository.getInstance(request.getSession());
 
-        Map<String, Map.Entry<String, Event>> photoAndEvents = new LinkedHashMap<>();
+        Map<Map.Entry<String, Event>, String> photoAndEvents = new LinkedHashMap<>();
 
         for (Map.Entry<String, Event> event : eventMap.entrySet()) {
 
             try {
 
-                photoAndEvents.put(storageService.getPhoto(userRepository.findById(event.getValue().getOwner().getUserId()), event.getValue().getPhotoUrl()), event);
+                photoAndEvents.put(event, storageService.getPhoto(userRepository.findById(event.getValue().getOwner().getUserId()), event.getValue().getPhotoUrl()));
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Events Here - ${event.name}</title>
+    <title>${event.name}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <script
           src="https://code.jquery.com/jquery-3.4.1.js"
@@ -130,7 +130,7 @@ function unvisit() {
 
             <div style="margin-left: 5%; margin-top:5%;">
               <c:forEach var="tag" items="${event.hashTags}">
-               <a href="${pageContext.request.contextPath}/search?tag=${tag}">
+               <a href="${pageContext.request.contextPath}/search?hash=${tag}">
                  <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
                </a>
               </c:forEach>
@@ -139,10 +139,15 @@ function unvisit() {
 
          <div class="column">
 
-            <div style="margin-left: 25%; margin-bottom: 10%;">
-             <b style="margin-left: 25%;">Date and time:</b>
-             <br/><p style="font-size: 16px;">${event.getFullFormattedDateTime()}</p>
+            <div style="margin-left: 40%; margin-bottom: 10%;">
+             <b>Date and time:</b>
+             <br/><p style="font-size: 16px; width: 50%;">${event.getFullFormattedDateTime()}</p>
            </div>
+           <div style="margin-left: 40%; margin-bottom: 10%;">
+            <b>Location:</b>
+            <br/><p style="font-size: 16px; width: 50%;">${event.getFormattedAddress()}</p>
+            <a style="margin-left: 5%;" target="_blank" href="${map_url}">Show on map</a>
+          </div>
 
          </div>
 

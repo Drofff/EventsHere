@@ -105,10 +105,10 @@
                 <c:forEach var="event" items="${events}">
 
                       <div class="item" style="margin-top: 5%;">
-                        <img class="ui avatar image" src="${event.key}">
+                        <img class="ui avatar image" src="${event.value}">
                         <div class="content">
-                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}">${event.value.name}</a>
-                          <div class="description">${fn:length(event.value.getMembers())} Members</div>
+                          <a class="header" href="${pageContext.request.contextPath}/event?id=${event.key.id}">${event.key.name}</a>
+                          <div class="description">${fn:length(event.key.getMembers())} Members</div>
                         </div>
                       </div>
 
