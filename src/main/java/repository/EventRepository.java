@@ -303,6 +303,11 @@ public class EventRepository implements Serializable {
                 addEventStatement.setString(2, event.getDescription());
                 addEventStatement.setTimestamp(3, Timestamp.valueOf(event.getDateTime()));
                 addEventStatement.setLong(4, event.getOwner().getUserId());
+
+                if (event.getPhotoUrl() == null || event.getPhotoUrl().isEmpty()) {
+                    throw new Exception("Photo is empty");
+                }
+
                 addEventStatement.setString(5, event.getPhotoUrl());
 
                 ResultSet resultSet = addEventStatement.executeQuery();

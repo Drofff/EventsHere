@@ -54,7 +54,11 @@ public class AddEventServlet extends HttpServlet {
                 Event currentEvent = eventRepository.findById(eventId);
 
                 String oldDescription = currentEvent.getDescription();
-                currentEvent.setDescription(oldDescription.replace("\"", "\'\'"));
+
+                oldDescription = oldDescription.replace("\r\n", "\\n");
+                oldDescription = oldDescription.replace("\"", "\'\'");
+
+                currentEvent.setDescription(oldDescription);
 
                 req.setAttribute("oldData", currentEvent);
 
@@ -122,6 +126,10 @@ public class AddEventServlet extends HttpServlet {
 
             Map<String, String> errors = validationService.validate(event);
 
+            if ( (event.getPhotoUrl() == null || event.getPhotoUrl().isEmpty()) && event.getId() == null) {
+                errors.put("photoUrlError", "Please select photo");
+            }
+
             if (errors.size() == 0) {
 
                 event.setOwner(profile);
@@ -137,7 +145,12 @@ public class AddEventServlet extends HttpServlet {
             } else {
 
                 String oldDescription = event.getDescription();
-                event.setDescription(oldDescription.replace("\"", "\'\'"));
+
+                oldDescription = oldDescription.replace("\"", "\'\'");
+
+                oldDescription = oldDescription.replace("\r\n", "\\n");
+
+                event.setDescription(oldDescription);
 
                 req.setAttribute("oldData", event);
 

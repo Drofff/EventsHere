@@ -1,10 +1,10 @@
 package servlet;
 
+import entity.Event;
+import entity.Profile;
 import repository.EventRepository;
 import repository.ProfileRepository;
 import repository.UserRepository;
-import entity.Event;
-import entity.Profile;
 import service.AuthenticationService;
 import service.StorageService;
 
@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @WebServlet(name = "EventServlet", urlPatterns = {"/event"})
 public class EventServlet extends HttpServlet {
@@ -33,6 +31,8 @@ public class EventServlet extends HttpServlet {
             Long id = Long.parseLong(req.getParameter("id"));
 
             Event currentEvent = eventRepository.findById(id);
+
+            currentEvent.setDescription(currentEvent.getDescription().replace("\n", "<br/>"));
 
             req.setAttribute("event", currentEvent);
             req.setAttribute("eventPhoto", storageService.getPhoto(userRepository.findById(currentEvent.getOwner().getUserId()), currentEvent.getPhotoUrl()));

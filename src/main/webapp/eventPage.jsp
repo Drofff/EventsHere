@@ -58,45 +58,99 @@ function unvisit() {
     <a class="item" href="${pageContext.request.contextPath}/subscription">Subscription</a>
     <a class="item" href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>
-<div class="ui segment" style="margin-left: 20%; margin-top: 3%; width: 70%;">
-
-<div style="margin-top: 5%; margin-bottom: 5%; margin-left: 5%;  margin-right: 5%;">
+<div style="margin-left: 20%; margin-top: 3%; width: 70%;">
 
 
- <div class="item">
-      <img class="ui large rounded image" src="${eventPhoto}">
- <div class="content">
-   <h2 class="header" style="margin-top: 5%; margin-bottom: 5%;">${event.name}</h2>
-     <div class="meta" style="margin-bottom: 5%;">
-       <span class="cinema">
-        <img class="ui avatar image" src="${event.owner.photoUrl}">
-        <span>Provided by <a href="${pageContext.request.contextPath}/profile?id=${event.owner.id}">${event.owner.firstName} ${event.owner.lastName}</a></span>
-       </span>
-     </div>
-     <c:if test="${not empty member && member}">
-        <div class="ui left icon input" style="margin-bottom:5%;">
-          <input type="text" readonly value="${event.owner.phoneNumber}" placeholder="Contact phone">
-          <i class="mobile icon"></i>
-        </div>
-     </c:if>
-     <div class="description" style="margin-bottom: 5%;">
-        ${event.description}
-     </div>
-     <div class="extra">
-      <c:forEach var="tag" items="${event.hashTags}">
-       <a href="${pageContext.request.contextPath}/search?tag=${tag}">
-         <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
-       </a>
-      </c:forEach>
-     </div>
+<div class="ui two column grid" style="margin-left: 5%;">
+
+  <div class="row">
+
+    <div class="column" style="background : #EDEBED">
+
+        <img class="ui image" src="${eventPhoto}" style="width:100%; height:100%; margin-left: -4%;">
+
     </div>
 
-    <div class="ui label" style="margin-bottom: 5%; margin-top: 5%;">
-                <i class="calendar icon"></i> ${event.getFormattedDateTime()}
-              </div>
+    <div class="column" style="background : #EDEBED">
 
+        <h2 class="header" style="margin-top: 10%; margin-bottom: 5%;">${event.name}</h2>
+         <div class="meta" style="margin-bottom: 5%;">
+               <span class="cinema">
+                <span><a href="${pageContext.request.contextPath}/profile?id=${event.owner.id}" style="color: #9A9BAA">by ${event.owner.firstName} ${event.owner.lastName}</a></span>
+               </span>
+             </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+ <div class="ui segment" style="margin-left: 4.8%; margin-top: -2%; width: 97%; margin-bottom: 5%;">
+
+      <div class="ui labeled button" tabindex="0">
+        <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.id}">
+            <i class="heart icon"></i> Like
+        </a>
+        <a class="ui basic red left pointing label">
+            ${ fn:length(event.getLikes()) }
+        </a>
+     </div>
+
+     <c:if test="${empty member}">
+            <div class="ui right floated primary button" onclick="visit()" >
+                Visit
+             <i class="right chevron icon"></i>
+            </div>
+        </c:if>
+
+        <c:if test="${not empty member}">
+             <div class="ui right floated primary button" onclick="unvisit()" >
+                You are already member
+             </div>
+        </c:if>
+
+     <div class="ui divider" style="margin-top: 2%;"></div>
+
+    <div class="description" style="margin-bottom: 5%; margin-top: 3%; margin-left: 5%; margin-right: 5%; width: 85%;">
+        ${event.description}
+     </div>
+
+     <div class="ui two column grid">
+
+        <div class="column">
+
+            <c:if test="${not empty member && member}">
+                <div class="ui left icon input" style="margin-bottom:10%; margin-left: 5%;">
+                  <input type="text" readonly value="${event.owner.phoneNumber}" placeholder="Contact phone">
+                  <i class="mobile icon"></i>
+                </div>
+             </c:if>
+
+            <div style="margin-left: 5%; margin-top:5%;">
+              <c:forEach var="tag" items="${event.hashTags}">
+               <a href="${pageContext.request.contextPath}/search?tag=${tag}">
+                 <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
+               </a>
+              </c:forEach>
+            </div>
+         </div>
+
+         <div class="column">
+
+            <div style="margin-left: 25%; margin-bottom: 10%;">
+             <b style="margin-left: 25%;">Date and time:</b>
+             <br/><p style="font-size: 16px;">${event.getFullFormattedDateTime()}</p>
+           </div>
+
+         </div>
+
+    </div>
+
+    <c:if test="${ not empty event.getMembers() && event.getMembers().size() > 0}">
     <h4 class="header">Members:</h4>
-    <div class="ui middle aligned selection list" style="margin-bottom: 5%;">
+    <div class="ui middle aligned selection list" style="margin-bottom: 1%;">
     <c:forEach var="member" items="${event.getMembers()}">
       <a class="item" href="${pageContext.request.contextPath}/profile?id=${member.id}">
         <img class="ui avatar image" src="${member.photoUrl}">
@@ -106,29 +160,7 @@ function unvisit() {
       </a>
     </c:forEach>
     </div>
-
-
-     <div class="ui labeled button" tabindex="0">
-        <a class="ui red button" href="${pageContext.request.contextPath}/like?id=${event.id}">
-            <i class="heart icon"></i> Like
-        </a>
-        <a class="ui basic red left pointing label">
-            ${ fn:length(event.getLikes()) }
-        </a>
-     </div>
-
-    <c:if test="${empty member}">
-       <div class="ui right floated primary button" onclick="visit()" >
-           Visit
-        <i class="right chevron icon"></i>
-       </div>
-   </c:if>
-
-   <c:if test="${not empty member}">
-        <div class="ui right floated primary button" onclick="unvisit()" >
-           You are already member
-        </div>
-   </c:if>
+    </c:if>
 
    <div class="ui basic modal">
      <div class="ui icon header">
@@ -173,7 +205,6 @@ function unvisit() {
            </button>
      </div>
       </form>
-   </div>
 
 
 </div>

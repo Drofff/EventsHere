@@ -162,6 +162,9 @@
                     </div>
                 </c:forEach>
               </div>
+              <c:if test="${not empty photoUrlError}">
+                  <h4 class="header" style="color:red; margin-bottom: 10%;">${photoUrlError}</h4>
+                </c:if>
             </div>
             </div>
 

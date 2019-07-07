@@ -51,9 +51,9 @@
                 <img src="${profile.photoUrl}">
               </a>
               <div class="content">
-                <a class="header" href="#">${profile.firstName} ${profile.lastName}</a>
+                <p class="header" href="#">${profile.firstName} ${profile.lastName}</p>
                 <div class="meta">
-                  <a>${profile.status}</a>
+                  ${profile.status}
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
 
           </div>
 
-           <div class="six wide column">
+           <div class="six wide column" style="margin-left: 10%;">
                    <div class="ui statistics">
                      <div class="statistic">
                            <div class="value">

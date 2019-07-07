@@ -49,11 +49,11 @@
     <div class="ui two column grid">
       <div class="row">
         <div class="column">
-            <h3 class="ui header">Events Here</h3>
+            <h3 class="ui header"><b>Events Here</b></h3>
         </div>
         <div class="column">
             <form action="${pageContext.request.contextPath}/search" method="get">
-                <div class="ui icon input">
+                <div class="ui transparent icon input">
                   <input type="text" name="name" placeholder="Search...">
                   <i class="search icon"></i>
                 </div>
@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <div class="ui divided items" style="margin-top: 5%;">
+    <div class="ui divided items" style="margin-top: 10%;">
 
     <c:choose>
 
@@ -70,10 +70,10 @@
               <c:forEach var="event" items="${events}">
 
                   <div class="item" style="margin-top:4%;">
-                    <div class="ui large small">
+                    <div class="ui image medium">
                       <img src="${event.key}" style="max-width: 400px;">
                     </div>
-                    <div class="content" style="margin-left: 5%;">
+                    <div class="content" style="margin-left: 3%;">
                       <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}" style="margin-bottom:4%; margin-top:2%;">${event.value.name}</a>
                       <div class="meta">
                         <span class="cinema">
@@ -83,16 +83,6 @@
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
                            <i class="calendar icon"></i> ${event.value.getFormattedDateTime()}
-                      </div>
-                      <div class="description" style="margin-bottom: 5%;">
-                        ${event.value.description}
-                      </div>
-                      <div class="extra">
-                        <c:forEach var="tag" items="${event.value.hashTags}">
-                            <a href="${pageContext.request.contextPath}/search?tag=${tag}">
-                                <div class="ui label"><i class="hashtag icon"></i> ${tag}</div>
-                            </a>
-                        </c:forEach>
                       </div>
                       <div class="extra" style="margin-bottom: 7%;">
                            <div class="ui label"><i class="users icon"></i> ${ fn:length(event.value.getMembers()) } Members</div>

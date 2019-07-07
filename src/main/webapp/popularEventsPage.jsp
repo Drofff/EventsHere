@@ -97,10 +97,7 @@
                         <div class="content">
                           <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.value.id}">${event.value.value.name}</a>
                           <div class="meta">
-                            <a>Upcoming event</a>
-                          </div>
-                          <div class="description">
-                                ${event.value.value.description}
+                            <a>${event.value.value.getFormattedDateTime()}</a>
                           </div>
                           <a class="ui red ribbon label" style="margin-top: 5%;" href="${pageContext.request.contextPath}/search?hash=${event.value.key}">${event.value.key}</a>
                         </div>

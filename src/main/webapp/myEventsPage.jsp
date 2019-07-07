@@ -64,14 +64,11 @@
   <div class="card">
     <div class="content">
       <img class="right floated tiny ui image" src="${event.key}">
-      <div class="header">
+      <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}">
          ${event.value.name}
-      </div>
+      </a>
       <div class="meta">
         ${event.value.getFormattedDateTime()}
-      </div>
-      <div class="description">
-        ${event.value.description}
       </div>
     </div>
     <div class="extra content">

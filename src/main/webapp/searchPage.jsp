@@ -174,10 +174,10 @@
               <c:forEach var="event" items="${events}">
 
                   <div class="item">
-                    <div class="image">
-                      <img src="${event.key}">
+                    <div class="ui image medium">
+                      <img src="${event.key}" style="max-width: 400px;">
                     </div>
-                    <div class="content">
+                    <div class="content" style="margin-left: 3%;">
                       <a class="header" href="${pageContext.request.contextPath}/event?id=${event.value.id}" style="margin-bottom:4%; margin-top:2%;">${event.value.name}</a>
                       <div class="meta">
                         <span class="cinema">
@@ -187,9 +187,6 @@
                       </div>
                       <div class="ui label" style="margin-top: 4%; margin-bottom: 4%;">
                            <i class="calendar icon"></i> ${event.value.getFormattedDateTime()}
-                      </div>
-                      <div class="description" style="margin-bottom: 5%;">
-                        ${event.value.description}
                       </div>
                       <div class="extra">
                         <c:forEach var="tag" items="${event.value.hashTags}">

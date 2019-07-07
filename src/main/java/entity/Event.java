@@ -57,7 +57,12 @@ public class Event {
     }
 
     public String getFormattedDateTime() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE' 'dd' of 'MMMM' 'HH:mm");
+        return this.dateTime.format(dateTimeFormatter);
+    }
+
+    public String getFullFormattedDateTime() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEEE' 'dd' of 'MMMM' 'uuuu' at 'HH:mm");
         return this.dateTime.format(dateTimeFormatter);
     }
 
