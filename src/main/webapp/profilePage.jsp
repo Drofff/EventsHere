@@ -119,30 +119,31 @@
 
             </c:if>
 
-            <c:if test="${not empty history && history.size() > 0}">
-
-             <h4 class="header" style="margin-top: 12%;">History:</h4>
-
-                <div class="ui list" style="margin-top: 5%;">
-
-                <c:forEach var="event" items="${history}">
-                  <div class="item">
-                    <i class="map marker icon"></i>
-                    <div class="content">
-                      <a class="header">${event.name}</a>
-                      <div class="description" style="margin-top: 2%;">
-                        <div class="ui label"><i class="users icon"></i> ${ fn:length(event.getMembers()) } Members</div>
-                        <div class="ui label"><i class="heart icon"></i> ${ fn:length(event.getLikes()) } Likes</div>
-                      </div>
-                    </div>
-                  </div>
-                </c:forEach>
-
-                </div>
-
-            </c:if>
-
           </div>
+
+          <c:if test="${not empty history && history.size() > 0}">
+
+                          <h4 class="header" style="margin-top: 7%;">History:</h4>
+
+                          <div class="ui list" style="margin-top: 5%;">
+
+                          <c:forEach var="event" items="${history}">
+                            <div class="item">
+                              <i class="map marker icon"></i>
+                              <div class="content">
+                                <a class="header">${event.name}</a>
+                                <div class="description" style="margin-top: 2%;">
+                                  <div class="ui label"><i class="users icon"></i> ${ fn:length(event.getMembers()) } Members</div>
+                                  <div class="ui label"><i class="heart icon"></i> ${ fn:length(event.getLikes()) } Likes</div>
+                                </div>
+                              </div>
+                            </div>
+                          </c:forEach>
+
+                          </div>
+
+                      </c:if>
+
         </div>
       </div>
     </div>
